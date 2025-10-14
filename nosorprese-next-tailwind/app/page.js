@@ -41,16 +41,28 @@ function formatDate(d) {
   });
 }
 
-/* ===== UI ===== */
 function BrandLogo({ src, alt }) {
+  // base = "/logos/tim" anche se arrivi con "/logos/tim.svg"
+  const base = useMemo(() => src.replace(/\.(svg|png)$/i, ""), [src]);
+  const [current, setCurrent] = useState(src);
+
   return (
     <div className="flex items-center gap-2">
-      {/* next/image non necessario per loghi */}
-      <img src={src} alt={alt} className="h-6 w-auto" />
+      {/* Prova SVG -> se 404 passa a PNG; se PNG -> prova SVG */}
+      <img
+        src={current}
+        alt={alt}
+        className="h-6 w-auto"
+        onError={() => {
+          if (current.toLowerCase().endsWith(".svg")) setCurrent(`${base}.png`);
+          else if (current.toLowerCase().endsWith(".png")) setCurrent(`${base}.svg`);
+        }}
+      />
       <span className="font-semibold text-sm">{alt}</span>
     </div>
   );
 }
+
 
 function OfferCard({ logoName, logoSrc, title, price, promo, change }) {
   return (
