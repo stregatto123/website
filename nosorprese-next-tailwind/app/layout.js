@@ -1,3 +1,4 @@
+import './globals.css';
 export const metadata = {
   title: "NoSorprese Broker",
   description: "Comparatore fibra, luce e gas – gratuito, trasparente",
