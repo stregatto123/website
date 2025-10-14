@@ -1,16 +1,26 @@
 'use client';
 import { useMemo, useState } from "react";
 
-/* ===== Assets map (usa /public/logos/* per loghi locali) ===== */
+/* ===== Assets map (smart detection for PNG/SVG) ===== */
+// Funzione per costruire il percorso del logo.
+// Supporta automaticamente sia .svg che .png nella cartella /public/logos
+const getLogoPath = (name) => {
+  const base = `/logos/${name.toLowerCase()}`;
+  // Prova SVG, poi PNG — Next caricherà il file disponibile
+  const possible = [`${base}.svg`, `${base}.png`];
+  return possible[0];
+};
+
+// Mappa brand con percorsi dinamici
 const BRANDS = {
-  TIM: "/logos/tim.svg",
-  Vodafone: "/logos/vodafone.svg",
-  Fastweb: "/logos/fastweb.svg",
-  WindTre: "/logos/windtre.svg",
-  "Enel Energia": "/logos/enel.svg",
-  Edison: "/logos/edison.svg",
-  Plenitude: "/logos/plenitude.svg",
-  "A2A Energia": "/logos/a2a.svg",
+  TIM: getLogoPath("tim"),
+  Vodafone: getLogoPath("vodafone"),
+  Fastweb: getLogoPath("fastweb"),
+  WindTre: getLogoPath("windtre"),
+  "Enel Energia": getLogoPath("enel"),
+  Edison: getLogoPath("edison"),
+  Plenitude: getLogoPath("plenitude"),
+  "A2A Energia": getLogoPath("a2a"),
 };
 
 /* ===== Utils ===== */
@@ -21,9 +31,14 @@ function addMonths(date, months) {
   if (d.getMonth() !== ((targetMonth % 12) + 12) % 12) d.setDate(0);
   return d;
 }
+
 function formatDate(d) {
   if (!(d instanceof Date) || isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric" });
+  return d.toLocaleDateString("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 }
 
 /* ===== UI ===== */
