@@ -1,16 +1,20 @@
-'use client';
-import { useMemo, useState } from "react";
+"use client";
+import { useMemo, useState, useEffect } from "react";
 
 /* ===== Assets map (smart detection for PNG/SVG) ===== */
-// Funzione per costruire il percorso del logo.
-// Supporta automaticamente sia .svg che .png nella cartella /public/logos
+// Funzione per costruire il percorso del logo. Supporta automaticamente
+// sia .svg che .png nella cartella `/public/logos`. In combinazione con
+// il componente BrandLogo qui sotto, che proverà prima l'estensione
+// definita e in fallback quella alternativa, è sufficiente specificare
+// il nome base.
 const getLogoPath = (name) => {
   const base = `/logos/${name.toLowerCase()}`;
-  // prova .svg, poi .png; Next servirà il file disponibile
+  // Per Next.js App Router non serve specificare l'estensione;
+  // il componente BrandLogo farà fallback a .png se il .svg non esiste.
   return `${base}.svg`;
 };
 
-// Mappa brand con percorsi dinamici
+// Mappa brand con percorsi dinamici per tutti gli operatori supportati.
 const BRANDS = {
   // Telco esistenti
   TIM: getLogoPath("tim"),
@@ -44,6 +48,9 @@ const BRANDS = {
 };
 
 /* ===== Utils ===== */
+// Calcola una data aggiungendo un numero di mesi e aggiusta il giorno
+// finale per evitare di scorrere al mese successivo quando il giorno
+// originale non esiste nel mese target (es. 31/1 + 1 mese = 28/2).
 function addMonths(date, months) {
   const d = new Date(date.getTime());
   const targetMonth = d.getMonth() + months;
@@ -52,6 +59,7 @@ function addMonths(date, months) {
   return d;
 }
 
+// Format di data gg/mm/aaaa. Restituisce "—" se la data non è valida.
 function formatDate(d) {
   if (!(d instanceof Date) || isNaN(d.getTime())) return "—";
   return d.toLocaleDateString("it-IT", {
@@ -62,8 +70,10 @@ function formatDate(d) {
 }
 
 /* ===== UI ===== */
+// Componente per visualizzare il logo di un brand. Gestisce
+// automaticamente il fallback da .svg a .png (o viceversa) se il
+// caricamento fallisce.
 function BrandLogo({ src, alt }) {
-  // fallback da .svg a .png e viceversa, già implementato in versione precedente
   const base = useMemo(() => src.replace(/\.(svg|png)$/i, ""), [src]);
   const [current, setCurrent] = useState(src);
   return (
@@ -73,6 +83,7 @@ function BrandLogo({ src, alt }) {
         alt={alt}
         className="h-6 w-auto"
         onError={() => {
+          // fallback: prova l'estensione alternativa
           if (current.toLowerCase().endsWith(".svg")) setCurrent(`${base}.png`);
           else if (current.toLowerCase().endsWith(".png")) setCurrent(`${base}.svg`);
         }}
@@ -103,11 +114,12 @@ function OfferCardDetailed({ logoName, logoSrc, title, price, promo, change }) {
         <BrandLogo src={logoSrc} alt={logoName} />
         <div className="text-lg font-semibold">{price}</div>
       </div>
-      <div className="mt-2 text-sm text-zinc-700">{title} • {promo}</div>
+      <div className="mt-2 text-sm text-zinc-700">
+        {title} • {promo}
+      </div>
       <div className="mt-3 flex items-center justify-between">
         <div className="text-sm text-zinc-600">
-          Quando conviene cambiare:{" "}
-          <span className="font-medium text-zinc-800">{change}</span>
+          Quando conviene cambiare: <span className="font-medium text-zinc-800">{change}</span>
         </div>
         <button className="rounded-xl border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-zinc-400">
           Confronta
@@ -127,21 +139,15 @@ function EnergyCard({ provider, logoSrc, detail, annual, endPromo, recommend }) 
       <div className="mt-2 text-sm text-zinc-700">{detail}</div>
       <div className="mt-3 flex items-center justify-between text-sm">
         <div className="text-zinc-600">
-          Fine promo:{" "}
-          <span className="font-medium text-zinc-800">{endPromo}</span>
+          Fine promo: <span className="font-medium text-zinc-800">{endPromo}</span>
         </div>
         <div className="text-zinc-600">
-          Cambio consigliato:{" "}
-          <span className="font-medium text-zinc-800">{recommend}</span>
+          Cambio consigliato: <span className="font-medium text-zinc-800">{recommend}</span>
         </div>
       </div>
       <div className="mt-4 flex gap-3">
-        <button className="rounded-xl bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700">
-          Visualizza risparmio
-        </button>
-        <button className="rounded-xl border border-zinc-300 px-4 py-2 text-sm font-medium hover:border-zinc-400">
-          Confronta
-        </button>
+        <button className="rounded-xl bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700">Visualizza risparmio</button>
+        <button className="rounded-xl border border-zinc-300 px-4 py-2 text-sm font-medium hover:border-zinc-400">Confronta</button>
       </div>
     </div>
   );
@@ -175,12 +181,8 @@ function Step({ n, title, desc, icon }) {
   return (
     <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-2xl bg-blue-600 text-white grid place-content-center font-semibold">
-          {n}
-        </div>
-        <div className="text-2xl" aria-hidden>
-          {icon}
-        </div>
+        <div className="h-10 w-10 rounded-2xl bg-blue-600 text-white grid place-content-center font-semibold">{n}</div>
+        <div className="text-2xl" aria-hidden>{icon}</div>
       </div>
       <div className="mt-4 font-semibold">{title}</div>
       <div className="text-sm text-zinc-700">{desc}</div>
@@ -188,7 +190,169 @@ function Step({ n, title, desc, icon }) {
   );
 }
 
+// Form per la raccolta dei lead (analisi gratuita). Esegue una
+// richiesta POST a /api/leads con i dati inseriti e gestisce feedback.
+function LeadForm() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [note, setNote] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null); // null | "ok" | "error"
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setStatus(null);
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, city, note }),
+      });
+      setStatus(res.ok ? "ok" : "error");
+    } catch (err) {
+      setStatus("error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 mt-8 rounded-3xl border border-zinc-200 bg-gray-50 p-6"
+    >
+      <div>
+        <label className="block text-sm font-medium text-zinc-700">Nome*</label>
+        <input
+          type="text"
+          required
+          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-zinc-700">Email*</label>
+        <input
+          type="email"
+          required
+          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-zinc-700">Telefono*</label>
+        <input
+          type="tel"
+          required
+          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-zinc-700">Comune</label>
+        <input
+          type="text"
+          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-zinc-700">Note</label>
+        <textarea
+          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+      >
+        {loading ? "Invio..." : "Richiedi analisi gratuita"}
+      </button>
+      {status === "ok" && (
+        <p className="text-green-600 text-sm mt-2">
+          Grazie! Ti contatterò al più presto.
+        </p>
+      )}
+      {status === "error" && (
+        <p className="text-red-600 text-sm mt-2">
+          Si è verificato un errore. Riprova più tardi.
+        </p>
+      )}
+    </form>
+  );
+}
+
+// Componente per mostrare le offerte dinamiche lette da /offers.json.
+// Si divide in due colonne: Fibra/FWA e Luce/Gas (con eventuale dual).
+function Showcase({ brandMap }) {
+  const [offers, setOffers] = useState([]);
+  useEffect(() => {
+    fetch("/offers.json")
+      .then((r) => r.json())
+      .then(setOffers)
+      .catch(() => {});
+  }, []);
+  const telco = offers.filter((o) => o.category === "fiber" || o.category === "fwa");
+  const energy = offers.filter((o) =>
+    o.category === "electricity" || o.category === "gas" || o.category === "dual"
+  );
+  return (
+    <div className="grid lg:grid-cols-2 gap-8">
+      <div>
+        <h3 className="text-lg font-semibold">Fibra & FWA</h3>
+        <div className="mt-4 grid sm:grid-cols-2 gap-4">
+          {telco.map((o) => (
+            <div key={o.id} className="rounded-2xl border p-4 bg-white">
+              <div className="flex items-center justify-between">
+                <img src={brandMap[o.brand]} alt={o.brand} className="h-6 w-auto" />
+                <div className="font-semibold">€{o.price_month.toFixed(2)}/mese</div>
+              </div>
+              <div className="mt-1 text-sm text-zinc-700">{o.title}</div>
+              {o.promo_months ? (
+                <div className="text-xs text-zinc-600">Promo {o.promo_months} mesi</div>
+              ) : null}
+              {o.notes ? (
+                <div className="text-xs text-zinc-600">{o.notes}</div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold">Luce & Gas</h3>
+        <div className="mt-4 grid sm:grid-cols-2 gap-4">
+          {energy.map((o) => (
+            <div key={o.id} className="rounded-2xl border p-4 bg-white">
+              <div className="flex items-center justify-between">
+                <img src={brandMap[o.brand]} alt={o.brand} className="h-6 w-auto" />
+                <div className="font-semibold">da €{o.price_month.toFixed(2)}/mese</div>
+              </div>
+              <div className="mt-1 text-sm text-zinc-700">{o.title}</div>
+              {o.notes ? (
+                <div className="text-xs text-zinc-600">{o.notes}</div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+        <div className="text-xs text-zinc-500 mt-2">*stima indicativa, varia per consumi</div>
+      </div>
+    </div>
+  );
+}
+
+/* ===== Page Component ===== */
 export default function Page() {
+  // Stato per il calcolatore "quando cambiare"
   const [start, setStart] = useState(() => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -200,13 +364,12 @@ export default function Page() {
   const [bufferDays, setBufferDays] = useState(5);
   const [penalty, setPenalty] = useState(0);
 
+  // Calcola la data ideale per cambiare offerta considerando fine promo - buffer
   const resultDate = useMemo(() => {
     const s = new Date(start);
     if (isNaN(s.getTime())) return null;
     const end = addMonths(s, Number(months));
-    const res = new Date(
-      end.getTime() - bufferDays * 24 * 60 * 60 * 1000
-    );
+    const res = new Date(end.getTime() - bufferDays * 24 * 60 * 60 * 1000);
     return res;
   }, [start, months, bufferDays]);
 
@@ -223,6 +386,7 @@ export default function Page() {
             <a href="#how" className="hover:text-blue-600">Come funziona</a>
             <a href="#telco" className="hover:text-blue-600">Fibra & FWA</a>
             <a href="#energy" className="hover:text-blue-600">Luce & Gas</a>
+            <a href="#offerte" className="hover:text-blue-600">Offerte</a>
             <a href="#whyfree" className="hover:text-blue-600">Perché gratis</a>
             <a href="#contact" className="hover:text-blue-600">Contatti</a>
           </nav>
@@ -238,76 +402,33 @@ export default function Page() {
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight">
-                Sempre l’offerta migliore.{" "}
-                <span className="text-blue-600">Per davvero.</span>
+                Sempre l’offerta migliore. <span className="text-blue-600">Per davvero.</span>
               </h1>
               <p className="mt-4 text-lg text-zinc-700">
                 Bollette sotto controllo: confronto, attivazione e promemoria di cambio. Tu non pensi agli aumenti — ci penso io.
               </p>
               <div className="mt-6 flex gap-3">
-                <a
-                  href="#start"
-                  className="rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium shadow hover:bg-blue-700"
-                >
+                <a href="#start" className="rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium shadow hover:bg-blue-700">
                   Inizia gratis
                 </a>
-                <a
-                  href="#how"
-                  className="rounded-2xl border border-zinc-300 px-5 py-3 font-medium hover:border-zinc-400"
-                >
+                <a href="#how" className="rounded-2xl border border-zinc-300 px-5 py-3 font-medium hover:border-zinc-400">
                   Scopri come funziona
                 </a>
               </div>
               <div className="mt-6 flex gap-3 text-sm">
-                <span className="inline-flex items-center gap-2 rounded-xl bg-green-100 px-3 py-1 text-green-800">
-                  ✅ Servizio gratuito
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-xl bg-zinc-100 px-3 py-1">
-                  🧭 Consulente indipendente
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-xl bg-zinc-100 px-3 py-1">
-                  🔒 Trasparenza incentivi
-                </span>
+                <span className="inline-flex items-center gap-2 rounded-xl bg-green-100 px-3 py-1 text-green-800">✅ Servizio gratuito</span>
+                <span className="inline-flex items-center gap-2 rounded-xl bg-zinc-100 px-3 py-1">🧭 Consulente indipendente</span>
+                <span className="inline-flex items-center gap-2 rounded-xl bg-zinc-100 px-3 py-1">🔒 Trasparenza incentivi</span>
               </div>
             </div>
             <div className="relative">
               <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-                <div className="text-sm font-medium text-zinc-700 mb-3">
-                  Anteprima card offerte (solo FISSA)
-                </div>
+                <div className="text-sm font-medium text-zinc-700 mb-3">Anteprima card offerte (solo FISSA)</div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <OfferCard
-                    logoName="TIM"
-                    logoSrc={BRANDS.TIM}
-                    title="Fibra 1Gb"
-                    price="€24,90/mese"
-                    promo="Promo 12 mesi – poi €29,90"
-                    change="11/10/2026"
-                  />
-                  <OfferCard
-                    logoName="Vodafone"
-                    logoSrc={BRANDS.Vodafone}
-                    title="Fibra 2.5Gb"
-                    price="€27,90/mese"
-                    promo="Promo 24 mesi – router incluso"
-                    change="07/09/2027"
-                  />
-                  <OfferCard
-                    logoName="Fastweb"
-                    logoSrc={BRANDS.Fastweb}
-                    title="FWA 300Mb"
-                    price="€22,95/mese"
-                    promo="Promo 12 mesi – modem incluso"
-                    change="02/04/2026"
-                  />
-                  <OfferCard
-                    logoName="WindTre"
-                    logoSrc={BRANDS.WindTre}
-                    title="Fibra 1Gb"
-                    price="€26,99/mese"
-                    promo="Promo 12 mesi – poi €29,99"
-                    change="15/06/2026"
-                  />
+                  <OfferCard logoName="TIM" logoSrc={BRANDS.TIM} title="Fibra 1Gb" price="€24,90/mese" promo="Promo 12 mesi – poi €29,90" change="11/10/2026" />
+                  <OfferCard logoName="Vodafone" logoSrc={BRANDS.Vodafone} title="Fibra 2.5Gb" price="€27,90/mese" promo="Promo 24 mesi – router incluso" change="07/09/2027" />
+                  <OfferCard logoName="Fastweb" logoSrc={BRANDS.Fastweb} title="FWA 300Mb" price="€22,95/mese" promo="Promo 12 mesi – modem incluso" change="02/04/2026" />
+                  <OfferCard logoName="WindTre" logoSrc={BRANDS.WindTre} title="Fibra 1Gb" price="€26,99/mese" promo="Promo 12 mesi – poi €29,99" change="15/06/2026" />
                 </div>
               </div>
             </div>
@@ -318,37 +439,13 @@ export default function Page() {
       {/* How it works */}
       <section id="how" className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16">
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-            Come funziona
-          </h2>
-          <p className="mt-2 text-zinc-700">
-            4 step chiari dal primo check al monitoraggio continuo.
-          </p>
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Come funziona</h2>
+          <p className="mt-2 text-zinc-700">4 step chiari dal primo check al monitoraggio continuo.</p>
           <div className="mt-8 grid md:grid-cols-4 gap-6">
-            <Step
-              n={1}
-              title="Carica bollette"
-              desc="PDF/JPG o rispondi a 6 domande"
-              icon="🧾"
-            />
-            <Step
-              n={2}
-              title="Confronto offerte"
-              desc="Scelte spiegate in italiano"
-              icon="🔍"
-            />
-            <Step
-              n={3}
-              title="Piano cambio"
-              desc="Data precisa prima della fine promo"
-              icon="🗓️"
-            />
-            <Step
-              n={4}
-              title="Attivazione + monitoraggio"
-              desc="Pratiche e promemoria automatici"
-              icon="🤝"
-            />
+            <Step n={1} title="Carica bollette" desc="PDF/JPG o rispondi a 6 domande" icon="🧾" />
+            <Step n={2} title="Confronto offerte" desc="Scelte spiegate in italiano" icon="🔍" />
+            <Step n={3} title="Piano cambio" desc="Data precisa prima della fine promo" icon="🗓️" />
+            <Step n={4} title="Attivazione + monitoraggio" desc="Pratiche e promemoria automatici" icon="🤝" />
           </div>
         </div>
       </section>
@@ -358,104 +455,24 @@ export default function Page() {
         <div className="mx-auto max-w-7xl px-4 py-16">
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-                Fibra & FWA
-              </h2>
-              <p className="mt-2 text-zinc-700">
-                Verifico copertura reale e scelgo la soluzione migliore{" "}
-                <strong>solo telefonia fissa</strong>.
-              </p>
+              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Fibra & FWA</h2>
+              <p className="mt-2 text-zinc-700">Verifico copertura reale e scelgo la soluzione migliore <strong>solo telefonia fissa</strong>.</p>
             </div>
-            <a
-              href="#start"
-              className="hidden md:inline-flex rounded-2xl border border-zinc-300 px-4 py-2 font-medium hover:border-zinc-400"
-            >
-              Calcola quando cambiare
-            </a>
+            <a href="#start" className="hidden md:inline-flex rounded-2xl border border-zinc-300 px-4 py-2 font-medium hover:border-zinc-400">Calcola quando cambiare</a>
           </div>
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Offerte base già esistenti */}
-            <OfferCardDetailed
-              logoName="TIM"
-              logoSrc={BRANDS.TIM}
-              title="Fibra 1Gb"
-              price="€24,90/mese"
-              promo="Promo 12 mesi – poi €29,90"
-              change="11/10/2026"
-            />
-            <OfferCardDetailed
-              logoName="Vodafone"
-              logoSrc={BRANDS.Vodafone}
-              title="Fibra 2.5Gb"
-              price="€27,90/mese"
-              promo="Promo 24 mesi – router incluso"
-              change="07/09/2027"
-            />
-            <OfferCardDetailed
-              logoName="Fastweb"
-              logoSrc={BRANDS.Fastweb}
-              title="FWA 300Mb"
-              price="€22,95/mese"
-              promo="Promo 12 mesi – modem incluso"
-              change="02/04/2026"
-            />
+            {/* Offerte di base */}
+            <OfferCardDetailed logoName="TIM" logoSrc={BRANDS.TIM} title="Fibra 1Gb" price="€24,90/mese" promo="Promo 12 mesi – poi €29,90" change="11/10/2026" />
+            <OfferCardDetailed logoName="Vodafone" logoSrc={BRANDS.Vodafone} title="Fibra 2.5Gb" price="€27,90/mese" promo="Promo 24 mesi – router incluso" change="07/09/2027" />
+            <OfferCardDetailed logoName="Fastweb" logoSrc={BRANDS.Fastweb} title="FWA 300Mb" price="€22,95/mese" promo="Promo 12 mesi – modem incluso" change="02/04/2026" />
             {/* Nuove offerte telco */}
-            <OfferCardDetailed
-              logoName="Iliad"
-              logoSrc={BRANDS.Iliad}
-              title="Fibra 5Gb"
-              price="€24,90/mese"
-              promo="FTTH 5Gb – router incluso"
-              change="—"
-            />
-            <OfferCardDetailed
-              logoName="Tiscali"
-              logoSrc={BRANDS.Tiscali}
-              title="UltraFibra"
-              price="€27,95/mese"
-              promo="FTTH 1Gb – router incluso"
-              change="—"
-            />
-            <OfferCardDetailed
-              logoName="Sky"
-              logoSrc={BRANDS.Sky}
-              title="Sky WiFi"
-              price="€29,90/mese"
-              promo="FTTH 1Gb – router incluso"
-              change="—"
-            />
-            <OfferCardDetailed
-              logoName="EOLO"
-              logoSrc={BRANDS.EOLO}
-              title="FWA 30Mb"
-              price="€24,90/mese"
-              promo="FWA 30Mb – router incluso"
-              change="—"
-            />
-            <OfferCardDetailed
-              logoName="PosteCasa"
-              logoSrc={BRANDS.PosteCasa}
-              title="Ultraveloce"
-              price="€26,90/mese"
-              promo="FTTH 1Gb"
-              change="—"
-            />
-            <OfferCardDetailed
-              logoName="Linkem"
-              logoSrc={BRANDS.Linkem}
-              title="Home 50Mb"
-              price="€19,90/mese"
-              promo="FWA 50Mb"
-              change="—"
-            />
-            <OfferCardDetailed
-              logoName="Aruba"
-              logoSrc={BRANDS.Aruba}
-              title="Fibra 2.5Gb"
-              price="€29,00/mese"
-              promo="FTTH 2,5Gb"
-              change="—"
-            />
+            <OfferCardDetailed logoName="Iliad" logoSrc={BRANDS.Iliad} title="Fibra 5Gb" price="€24,90/mese" promo="FTTH 5Gb – router incluso" change="—" />
+            <OfferCardDetailed logoName="Tiscali" logoSrc={BRANDS.Tiscali} title="UltraFibra" price="€27,95/mese" promo="FTTH 1Gb – router incluso" change="—" />
+            <OfferCardDetailed logoName="Sky" logoSrc={BRANDS.Sky} title="Sky WiFi" price="€29,90/mese" promo="FTTH 1Gb – router incluso" change="—" />
+            <OfferCardDetailed logoName="EOLO" logoSrc={BRANDS.EOLO} title="FWA 30Mb" price="€24,90/mese" promo="FWA 30Mb – router incluso" change="—" />
+            <OfferCardDetailed logoName="PosteCasa" logoSrc={BRANDS.PosteCasa} title="Ultraveloce" price="€26,90/mese" promo="FTTH 1Gb" change="—" />
+            <OfferCardDetailed logoName="Linkem" logoSrc={BRANDS.Linkem} title="Home 50Mb" price="€19,90/mese" promo="FWA 50Mb" change="—" />
+            <OfferCardDetailed logoName="Aruba" logoSrc={BRANDS.Aruba} title="Fibra 2.5Gb" price="€29,00/mese" promo="FTTH 2,5Gb" change="—" />
           </div>
         </div>
       </section>
@@ -463,170 +480,173 @@ export default function Page() {
       {/* Energy */}
       <section id="energy" className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16">
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-            Luce & Gas
-          </h2>
-          <p className="mt-2 text-zinc-700">
-            Fisso o indicizzato? Valuto consumi e ti propongo un piano per bloccare gli aumenti.
-          </p>
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Luce & Gas</h2>
+          <p className="mt-2 text-zinc-700">Fisso o indicizzato? Valuto consumi e ti propongo un piano per bloccare gli aumenti.</p>
           <div className="mt-8 grid md:grid-cols-2 gap-6">
-            {/* Offerte esistenti */}
-            <EnergyCard
-              provider="Enel Energia"
-              logoSrc={BRANDS["Enel Energia"]}
-              detail="PUN + 0,07 € / kWh"
-              annual="€820"
-              endPromo="02/2026"
-              recommend="01/2026"
-            />
-            <EnergyCard
-              provider="Edison"
-              logoSrc={BRANDS.Edison}
-              detail="Prezzo fisso 12 mesi"
-              annual="€690"
-              endPromo="12/2025"
-              recommend="11/2025"
-            />
-            <EnergyCard
-              provider="Plenitude"
-              logoSrc={BRANDS.Plenitude}
-              detail="Indicizzato PSV + spread"
-              annual="€740"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
-            <EnergyCard
-              provider="A2A Energia"
-              logoSrc={BRANDS["A2A Energia"]}
-              detail="Fisso 12 mesi luce+gas"
-              annual="€1.420 (dual)"
-              endPromo="09/2026"
-              recommend="08/2026"
-            />
-            <EnergyCard
-              provider="Sorgenia"
-              logoSrc={BRANDS.Sorgenia || BRANDS["A2A Energia"]}
-              detail="Prezzo indicizzato"
-              annual="€730"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
-            <EnergyCard
-              provider="NeN"
-              logoSrc={BRANDS.NeN}
-              detail="Fisso 36 mesi"
-              annual="€780"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
+            {/* Offerte energia esistenti */}
+            <EnergyCard provider="Enel Energia" logoSrc={BRANDS["Enel Energia"]} detail="PUN + 0,07 € / kWh" annual="€820" endPromo="02/2026" recommend="01/2026" />
+            <EnergyCard provider="Edison" logoSrc={BRANDS.Edison} detail="Prezzo fisso 12 mesi" annual="€690" endPromo="12/2025" recommend="11/2025" />
+            <EnergyCard provider="Plenitude" logoSrc={BRANDS.Plenitude} detail="Indicizzato PSV + spread" annual="€740" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="A2A Energia" logoSrc={BRANDS["A2A Energia"]} detail="Fisso 12 mesi luce+gas" annual="€1.420 (dual)" endPromo="09/2026" recommend="08/2026" />
             {/* Nuove offerte energia */}
-            <EnergyCard
-              provider="E.ON"
-              logoSrc={BRANDS["E.ON"]}
-              detail="PUN + 0,08 € / kWh"
-              annual="€900"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
-            <EnergyCard
-              provider="ENGIE"
-              logoSrc={BRANDS.ENGIE}
-              detail="Tariffa indicizzata"
-              annual="€850"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
-            <EnergyCard
-              provider="Acea"
-              logoSrc={BRANDS.Acea}
-              detail="Prezzo fisso 12 mesi"
-              annual="€870"
-              endPromo="11/2025"
-              recommend="10/2025"
-            />
-            <EnergyCard
-              provider="Hera Comm"
-              logoSrc={BRANDS["Hera Comm"]}
-              detail="Indice PUN + spread"
-              annual="€890"
-              endPromo="03/2026"
-              recommend="02/2026"
-            />
-            <EnergyCard
-              provider="Iren"
-              logoSrc={BRANDS.Iren}
-              detail="Fisso 12 mesi"
-              annual="€880"
-              endPromo="04/2026"
-              recommend="03/2026"
-            />
-            <EnergyCard
-              provider="Illumia"
-              logoSrc={BRANDS.Illumia}
-              detail="Fisso 12 mesi"
-              annual="€860"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
-            <EnergyCard
-              provider="Pulsee"
-              logoSrc={BRANDS.Pulsee}
-              detail="Fisso 12 mesi"
-              annual="€840"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
-            <EnergyCard
-              provider="Dolomiti Energia"
-              logoSrc={BRANDS["Dolomiti Energia"]}
-              detail="Fisso 12 mesi"
-              annual="€880"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
-            <EnergyCard
-              provider="AGSM AIM"
-              logoSrc={BRANDS["AGSM AIM"]}
-              detail="Fisso 24 mesi"
-              annual="€920"
-              endPromo="—"
-              recommend="Monitoraggio continuo"
-            />
+            <EnergyCard provider="E.ON" logoSrc={BRANDS["E.ON"]} detail="PUN + 0,08 € / kWh" annual="€900" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="ENGIE" logoSrc={BRANDS.ENGIE} detail="Tariffa indicizzata" annual="€850" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="Acea" logoSrc={BRANDS.Acea} detail="Prezzo fisso 12 mesi" annual="€870" endPromo="11/2025" recommend="10/2025" />
+            <EnergyCard provider="Hera Comm" logoSrc={BRANDS["Hera Comm"]} detail="Indice PUN + spread" annual="€890" endPromo="03/2026" recommend="02/2026" />
+            <EnergyCard provider="Iren" logoSrc={BRANDS.Iren} detail="Fisso 12 mesi" annual="€880" endPromo="04/2026" recommend="03/2026" />
+            <EnergyCard provider="Illumia" logoSrc={BRANDS.Illumia} detail="Fisso 12 mesi" annual="€860" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="NeN" logoSrc={BRANDS.NeN} detail="Fisso 36 mesi" annual="€780" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="Pulsee" logoSrc={BRANDS.Pulsee} detail="Fisso 12 mesi" annual="€840" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="Dolomiti Energia" logoSrc={BRANDS["Dolomiti Energia"]} detail="Fisso 12 mesi" annual="€880" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="AGSM AIM" logoSrc={BRANDS["AGSM AIM"]} detail="Fisso 24 mesi" annual="€920" endPromo="—" recommend="Monitoraggio continuo" />
           </div>
+        </div>
+      </section>
+
+      {/* Offerte aggiornate dinamiche */}
+      <section id="offerte" className="bg-gray-50">
+        <div className="mx-auto max-w-7xl px-4 py-16">
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Offerte aggiornate</h2>
+          <p className="mt-2 text-zinc-700">Dati sempre aggiornati dai principali operatori. Puoi aggiornare il file offers.json per tenere il comparatore al passo.</p>
+          <Showcase brandMap={BRANDS} />
         </div>
       </section>
 
       {/* Why Free */}
       <section id="whyfree" className="bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 py-16">
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-            Perché è gratis
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Perché è gratis</h2>
           <div className="mt-4 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
             <p className="text-zinc-700">
-              Il servizio è gratuito perché ricevo un{" "}
-              <strong>gettone</strong> dagli operatori quando attivi un’offerta. Non paghi nulla e vedi comunque più alternative, con pro e contro chiari. La scelta finale è tua, senza vincoli.
+              Il servizio è gratuito perché ricevo un <strong>gettone</strong> dagli operatori quando attivi un’offerta. Non paghi nulla e vedi comunque più alternative, con pro e contro chiari. La scelta finale è tua, senza vincoli.
             </p>
             <div className="mt-4 flex flex-wrap gap-3 text-sm">
-              <span className="inline-flex items-center gap-2 rounded-xl bg-green-100 px-3 py-1 text-green-800">
-                ✅ Servizio gratuito
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-xl bg-zinc-100 px-3 py-1">
-                🧭 Consulente indipendente
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-xl bg-zinc-100 px-3 py-1">
-                🔒 Trasparenza incentivi
-              </span>
+              <span className="inline-flex items-center gap-2 rounded-xl bg-green-100 px-3 py-1 text-green-800">✅ Servizio gratuito</span>
+              <span className="inline-flex items-center gap-2 rounded-xl bg-zinc-100 px-3 py-1">🧭 Consulente indipendente</span>
+              <span className="inline-flex items-center gap-2 rounded-xl bg-zinc-100 px-3 py-1">🔒 Trasparenza incentivi</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Calculator */}
-      {/* ... mantieni il resto del file invariato (il modulo calcolatore e le recensioni) ... */}
+      <section id="start" className="bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-16">
+          <div className="grid lg:grid-cols-2 gap-8 items-start">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Calcola quando cambiare</h2>
+              <p className="mt-2 text-zinc-700">Inserisci i dati del tuo contratto: ti suggerisco la data ideale per lo switch, qualche giorno prima della fine promozione.</p>
+              <form className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-3xl border border-zinc-200 bg-gray-50 p-6" onSubmit={(e) => e.preventDefault()}>
+                <label className="text-sm">
+                  <span className="block mb-1 text-zinc-700">Data sottoscrizione</span>
+                  <input type="date" className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={start} onChange={(e) => setStart(e.target.value)} />
+                </label>
+                <label className="text-sm">
+                  <span className="block mb-1 text-zinc-700">Durata promo (mesi)</span>
+                  <select className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={months} onChange={(e) => setMonths(Number(e.target.value))}>
+                    {[6, 12, 18, 24, 36].map((m) => (
+                      <option key={m} value={m}>{m}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-sm">
+                  <span className="block mb-1 text-zinc-700">Buffer sicurezza (giorni)</span>
+                  <input type="number" min={0} max={30} className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={bufferDays} onChange={(e) => setBufferDays(Number(e.target.value))} />
+                </label>
+                <label className="text-sm">
+                  <span className="block mb-1 text-zinc-700">Penale di recesso (stima)</span>
+                  <select className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={penalty} onChange={(e) => setPenalty(Number(e.target.value))}>
+                    <option value={0}>Nessuna / irrilevante</option>
+                    <option value={20}>€20</option>
+                    <option value={30}>€30</option>
+                    <option value={50}>€50</option>
+                  </select>
+                </label>
+                <div className="sm:col-span-2">
+                  <div className="rounded-2xl bg-white border border-zinc-200 p-4">
+                    <div className="text-sm text-zinc-700">Risultato</div>
+                    {resultDate ? (
+                      <div className="mt-1 text-lg">
+                        Conviene cambiare intorno al <strong>{formatDate(resultDate)}</strong>
+                        {penalty > 0 && (
+                          <span className="block text-sm text-zinc-600">
+                            Nota: penale stimata €{penalty}. Verificheremo se conviene anticipare o posticipare lo switch.
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="mt-1 text-zinc-600">Inserisci una data valida.</div>
+                    )}
+                  </div>
+                </div>
+                <div className="sm:col-span-2 flex gap-3">
+                  <a href="#lead" className="rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium shadow hover:bg-blue-700">Prosegui con analisi gratuita</a>
+                  <button type="button" className="rounded-2xl border border-zinc-300 px-5 py-3 font-medium hover:border-zinc-400">Carica bollette</button>
+                </div>
+              </form>
+            </div>
+            <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
+              <h3 className="text-lg font-semibold">Cosa succede dopo</h3>
+              <ul className="mt-4 space-y-3 text-zinc-700">
+                <li>• Ti propongo 2–3 alternative chiare (pro/contro, tempi, vincoli).</li>
+                <li>• Prepariamo il passaggio senza interruzioni del servizio.</li>
+                <li>• Ti avviso prima della fine promo per non subire aumenti.</li>
+              </ul>
+              <div className="mt-6 grid grid-cols-3 gap-3 text-center">
+                <KPI label="Contratti ottimizzati" value="318" />
+                <KPI label="Risparmio medio annuo" value="€186" />
+                <KPI label="Soddisfazione" value="4.9/5" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Lead form section */}
+      <section id="lead" className="bg-gray-50">
+        <div className="mx-auto max-w-7xl px-4 py-16">
+          <h2 className="text-2xl md:text-3xl font-semibold">Analisi gratuita</h2>
+          <p className="mt-2 text-zinc-700">
+            Compila i campi: analizzerò la tua situazione e ti proporrò la migliore offerta.
+          </p>
+          <LeadForm />
+        </div>
+      </section>
+
+      {/* Reviews */}
+      <section className="bg-gray-50">
+        <div className="mx-auto max-w-7xl px-4 py-16">
+          <div className="grid md:grid-cols-3 gap-6">
+            <Review name="Luca" text="Mi ha avvisato prima dell’aumento, ho risparmiato €210." />
+            <Review name="Sara" text="Prezzi spiegati chiari e zero stress. Consigliato!" />
+            <Review name="Giulia" text="Cambio programmato con precisione. Ottimo servizio gratuito." />
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
-      {/* ... mantieni invariato ... */}
+      <footer id="contact" className="bg-white border-t border-zinc-200">
+        <div className="mx-auto max-w-7xl px-4 py-10 grid md:grid-cols-3 gap-6">
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-2xl bg-blue-500" />
+              <span className="font-semibold">NoSorprese Broker</span>
+            </div>
+            <p className="mt-3 text-sm text-zinc-700">Il tuo punto di riferimento per telefonia, luce e gas. Servizio gratuito — mi paga l’operatore.</p>
+          </div>
+          <div className="text-sm">
+            <div className="font-semibold mb-2">Contatti</div>
+            <p>WhatsApp / Tel: +39 3xx xxx xxxx</p>
+            <p>Email: info@dominio.it</p>
+            <p>Appuntamento: Calendly/link</p>
+          </div>
+          <div className="text-sm">
+            <div className="font-semibold mb-2">Legale</div>
+            <p>Privacy • Cookie • Trasparenza incentivi</p>
+            <p>P.IVA 00000000000</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
