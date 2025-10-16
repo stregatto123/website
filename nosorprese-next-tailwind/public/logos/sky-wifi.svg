@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="256" viewBox="0 0 512 256" role="img" aria-label="Sky Wifi logo placeholder">
+  <defs>
+    <style>
+      .bg { fill: #F2F2F2; }
+      .border { fill: none; stroke: #CFCFCF; stroke-width: 3; }
+      .text { font: 700 48px system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; fill: #333; }
+    </style>
+  </defs>
+  <rect class="bg" x="4" y="4" width="504" height="248" rx="24" ry="24"/>
+  <rect class="border" x="4" y="4" width="504" height="248" rx="24" ry="24"/>
+  <g text-anchor="middle" dominant-baseline="central" transform="translate(256,128)">
+    <text class="text">Sky Wifi</text>
+  </g>
+</svg>
