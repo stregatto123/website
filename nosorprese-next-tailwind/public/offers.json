@@ -1,0 +1,57 @@
+[
+  {
+    "id": "tim-fibra-1g",
+    "brand": "TIM",
+    "category": "fiber",
+    "title": "Fibra 1Gb",
+    "price_month": 24.90,
+    "promo_months": 12,
+    "notes": "poi 29,90€",
+    "last_update": "2025-10-14",
+    "active": true
+  },
+  {
+    "id": "iliad-ftth-5g",
+    "brand": "Iliad",
+    "category": "fiber",
+    "title": "FTTH 5Gb",
+    "price_month": 24.90,
+    "promo_months": 0,
+    "notes": "router incluso",
+    "last_update": "2025-10-14",
+    "active": true
+  },
+  {
+    "id": "eolo-fwa-30",
+    "brand": "EOLO",
+    "category": "fwa",
+    "title": "FWA 30Mb",
+    "price_month": 24.90,
+    "promo_months": 0,
+    "notes": "router incluso",
+    "last_update": "2025-10-14",
+    "active": true
+  },
+  {
+    "id": "enel-pun-007",
+    "brand": "Enel Energia",
+    "category": "electricity",
+    "title": "PUN + 0,07€/kWh",
+    "price_month": 68.00,
+    "promo_months": 0,
+    "notes": "stima famiglia media",
+    "last_update": "2025-10-14",
+    "active": true
+  },
+  {
+    "id": "edison-fisso-12",
+    "brand": "Edison",
+    "category": "electricity",
+    "title": "Prezzo fisso 12 mesi",
+    "price_month": 58.00,
+    "promo_months": 12,
+    "notes": "penale minima",
+    "last_update": "2025-10-14",
+    "active": true
+  }
+]
