@@ -1,56 +1,32 @@
 "use client";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 
-/* ===== Assets map (smart detection for PNG/SVG) ===== */
-// Funzione per costruire il percorso del logo. Supporta automaticamente
-// sia .svg che .png nella cartella `/public/logos`. In combinazione con
-// il componente BrandLogo qui sotto, che proverà prima l'estensione
-// definita e in fallback quella alternativa, è sufficiente specificare
-// il nome base.
-const getLogoPath = (name) => {
-  const base = `/logos/${name.toLowerCase()}`;
-  // Per Next.js App Router non serve specificare l'estensione;
-  // il componente BrandLogo farà fallback a .png se il .svg non esiste.
-  return `${base}.svg`;
-};
+/* ===== Loghi con fallback automatico ===== */
+function BrandLogo({ name }) {
+  const base = `/logos/${String(name || "").toLowerCase()}`;
+  const [src, setSrc] = useState(`${base}.svg`);
+  const [triedPng, setTriedPng] = useState(false);
 
-// Mappa brand con percorsi dinamici per tutti gli operatori supportati.
-const BRANDS = {
-  // Telco esistenti
-  TIM: getLogoPath("tim"),
-  Vodafone: getLogoPath("vodafone"),
-  Fastweb: getLogoPath("fastweb"),
-  WindTre: getLogoPath("windtre"),
-  // Energia esistenti
-  "Enel Energia": getLogoPath("enel"),
-  Edison: getLogoPath("edison"),
-  Plenitude: getLogoPath("plenitude"),
-  "A2A Energia": getLogoPath("a2a"),
-  // Nuovi operatori telco
-  Iliad: getLogoPath("iliad"),
-  Tiscali: getLogoPath("tiscali"),
-  Sky: getLogoPath("sky"),
-  EOLO: getLogoPath("eolo"),
-  PosteCasa: getLogoPath("postecasa"),
-  Linkem: getLogoPath("linkem"),
-  Aruba: getLogoPath("aruba"),
-  // Nuovi operatori energia
-  "E.ON": getLogoPath("eon"),
-  ENGIE: getLogoPath("engie"),
-  Acea: getLogoPath("acea"),
-  "Hera Comm": getLogoPath("hera"),
-  Iren: getLogoPath("iren"),
-  Illumia: getLogoPath("illumia"),
-  NeN: getLogoPath("nen"),
-  Pulsee: getLogoPath("pulsee"),
-  "Dolomiti Energia": getLogoPath("dolomiti"),
-  "AGSM AIM": getLogoPath("agsm"),
-};
+  return (
+    <div className="flex items-center gap-2">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={name}
+        className="h-6 w-auto"
+        onError={() => {
+          if (!triedPng) {
+            setTriedPng(true);
+            setSrc(`${base}.png`);
+          }
+        }}
+      />
+      <span className="font-semibold text-sm">{name}</span>
+    </div>
+  );
+}
 
 /* ===== Utils ===== */
-// Calcola una data aggiungendo un numero di mesi e aggiusta il giorno
-// finale per evitare di scorrere al mese successivo quando il giorno
-// originale non esiste nel mese target (es. 31/1 + 1 mese = 28/2).
 function addMonths(date, months) {
   const d = new Date(date.getTime());
   const targetMonth = d.getMonth() + months;
@@ -59,7 +35,6 @@ function addMonths(date, months) {
   return d;
 }
 
-// Format di data gg/mm/aaaa. Restituisce "—" se la data non è valida.
 function formatDate(d) {
   if (!(d instanceof Date) || isNaN(d.getTime())) return "—";
   return d.toLocaleDateString("it-IT", {
@@ -69,35 +44,12 @@ function formatDate(d) {
   });
 }
 
-/* ===== UI ===== */
-// Componente per visualizzare il logo di un brand. Gestisce
-// automaticamente il fallback da .svg a .png (o viceversa) se il
-// caricamento fallisce.
-function BrandLogo({ src, alt }) {
-  const base = useMemo(() => src.replace(/\.(svg|png)$/i, ""), [src]);
-  const [current, setCurrent] = useState(src);
-  return (
-    <div className="flex items-center gap-2">
-      <img
-        src={current}
-        alt={alt}
-        className="h-6 w-auto"
-        onError={() => {
-          // fallback: prova l'estensione alternativa
-          if (current.toLowerCase().endsWith(".svg")) setCurrent(`${base}.png`);
-          else if (current.toLowerCase().endsWith(".png")) setCurrent(`${base}.svg`);
-        }}
-      />
-      <span className="font-semibold text-sm">{alt}</span>
-    </div>
-  );
-}
-
-function OfferCard({ logoName, logoSrc, title, price, promo, change }) {
+/* ===== Card & UI ===== */
+function OfferCard({ logoName, title, price, promo, change }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-4">
       <div className="flex items-center justify-between">
-        <BrandLogo src={logoSrc} alt={logoName} />
+        <BrandLogo name={logoName} />
         <span className="text-sm rounded-xl bg-blue-50 px-2 py-0.5">{title}</span>
       </div>
       <div className="mt-2 text-lg font-semibold">{price}</div>
@@ -107,16 +59,14 @@ function OfferCard({ logoName, logoSrc, title, price, promo, change }) {
   );
 }
 
-function OfferCardDetailed({ logoName, logoSrc, title, price, promo, change }) {
+function OfferCardDetailed({ logoName, title, price, promo, change }) {
   return (
     <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow transition">
       <div className="flex items-center justify-between">
-        <BrandLogo src={logoSrc} alt={logoName} />
+        <BrandLogo name={logoName} />
         <div className="text-lg font-semibold">{price}</div>
       </div>
-      <div className="mt-2 text-sm text-zinc-700">
-        {title} • {promo}
-      </div>
+      <div className="mt-2 text-sm text-zinc-700">{title} • {promo}</div>
       <div className="mt-3 flex items-center justify-between">
         <div className="text-sm text-zinc-600">
           Quando conviene cambiare: <span className="font-medium text-zinc-800">{change}</span>
@@ -129,21 +79,17 @@ function OfferCardDetailed({ logoName, logoSrc, title, price, promo, change }) {
   );
 }
 
-function EnergyCard({ provider, logoSrc, detail, annual, endPromo, recommend }) {
+function EnergyCard({ provider, detail, annual, endPromo, recommend }) {
   return (
     <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow transition">
       <div className="flex items-center justify-between">
-        <BrandLogo src={logoSrc} alt={provider} />
+        <BrandLogo name={provider} />
         <div className="text-lg font-semibold">Stima annua {annual}</div>
       </div>
       <div className="mt-2 text-sm text-zinc-700">{detail}</div>
       <div className="mt-3 flex items-center justify-between text-sm">
-        <div className="text-zinc-600">
-          Fine promo: <span className="font-medium text-zinc-800">{endPromo}</span>
-        </div>
-        <div className="text-zinc-600">
-          Cambio consigliato: <span className="font-medium text-zinc-800">{recommend}</span>
-        </div>
+        <div className="text-zinc-600">Fine promo: <span className="font-medium text-zinc-800">{endPromo}</span></div>
+        <div className="text-zinc-600">Cambio consigliato: <span className="font-medium text-zinc-800">{recommend}</span></div>
       </div>
       <div className="mt-4 flex gap-3">
         <button className="rounded-xl bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700">Visualizza risparmio</button>
@@ -190,8 +136,66 @@ function Step({ n, title, desc, icon }) {
   );
 }
 
-// Form per la raccolta dei lead (analisi gratuita). Esegue una
-// richiesta POST a /api/leads con i dati inseriti e gestisce feedback.
+/* ===== Showcase (offerte da /public/offers.json) ===== */
+function Showcase() {
+  const [offers, setOffers] = useState([]);
+
+  React.useEffect(() => {
+    fetch("/offers.json")
+      .then(r => r.json())
+      .then(setOffers)
+      .catch(() => {});
+  }, []);
+
+  const telco = offers.filter(
+    o => o.category === "fiber" || o.category === "fwa"
+  ).slice(0, 6);
+
+  const energy = offers.filter(
+    o => ["electricity", "gas", "dual"].includes(o.category)
+  ).slice(0, 6);
+
+  return (
+    <div className="grid lg:grid-cols-2 gap-8">
+      <div>
+        <h3 className="text-lg font-semibold">Fibra & FWA</h3>
+        <div className="mt-4 grid sm:grid-cols-2 gap-4">
+          {telco.map(o => (
+            <div key={o.id} className="rounded-2xl border p-4 bg-white">
+              <div className="flex items-center justify-between">
+                <BrandLogo name={o.brand} />
+                <div className="font-semibold">€{o.price_month.toFixed(2)}/mese</div>
+              </div>
+              <div className="mt-1 text-sm text-zinc-700">{o.title}</div>
+              {o.promo_months ? (
+                <div className="text-xs text-zinc-600">Promo {o.promo_months} mesi</div>
+              ) : null}
+              {o.notes ? <div className="text-xs text-zinc-600">{o.notes}</div> : null}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold">Luce & Gas</h3>
+        <div className="mt-4 grid sm:grid-cols-2 gap-4">
+          {energy.map(o => (
+            <div key={o.id} className="rounded-2xl border p-4 bg-white">
+              <div className="flex items-center justify-between">
+                <BrandLogo name={o.brand} />
+                <div className="font-semibold">da €{o.price_month.toFixed(2)}/mese*</div>
+              </div>
+              <div className="mt-1 text-sm text-zinc-700">{o.title}</div>
+              {o.notes ? <div className="text-xs text-zinc-600">{o.notes}</div> : null}
+            </div>
+          ))}
+        </div>
+        <div className="text-xs text-zinc-500 mt-2">*stima indicativa, varia per consumi</div>
+      </div>
+    </div>
+  );
+}
+
+/* ===== Lead Form (punto 1) ===== */
 function LeadForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -199,7 +203,7 @@ function LeadForm() {
   const [city, setCity] = useState("");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(null); // null | "ok" | "error"
+  const [status, setStatus] = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -212,7 +216,7 @@ function LeadForm() {
         body: JSON.stringify({ name, email, phone, city, note }),
       });
       setStatus(res.ok ? "ok" : "error");
-    } catch (err) {
+    } catch {
       setStatus("error");
     } finally {
       setLoading(false);
@@ -220,139 +224,38 @@ function LeadForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 mt-8 rounded-3xl border border-zinc-200 bg-gray-50 p-6"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4 mt-8 rounded-3xl border border-zinc-200 bg-gray-50 p-6">
       <div>
         <label className="block text-sm font-medium text-zinc-700">Nome*</label>
-        <input
-          type="text"
-          required
-          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <input type="text" required className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={name} onChange={e=>setName(e.target.value)} />
       </div>
       <div>
         <label className="block text-sm font-medium text-zinc-700">Email*</label>
-        <input
-          type="email"
-          required
-          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <input type="email" required className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={email} onChange={e=>setEmail(e.target.value)} />
       </div>
       <div>
         <label className="block text-sm font-medium text-zinc-700">Telefono*</label>
-        <input
-          type="tel"
-          required
-          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
+        <input type="tel" required className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={phone} onChange={e=>setPhone(e.target.value)} />
       </div>
       <div>
         <label className="block text-sm font-medium text-zinc-700">Comune</label>
-        <input
-          type="text"
-          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-        />
+        <input type="text" className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={city} onChange={e=>setCity(e.target.value)} />
       </div>
       <div>
         <label className="block text-sm font-medium text-zinc-700">Note</label>
-        <textarea
-          className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-        />
+        <textarea className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={note} onChange={e=>setNote(e.target.value)} />
       </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
-      >
+      <button type="submit" disabled={loading} className="w-full rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium hover:bg-blue-700 disabled:opacity-50">
         {loading ? "Invio..." : "Richiedi analisi gratuita"}
       </button>
-      {status === "ok" && (
-        <p className="text-green-600 text-sm mt-2">
-          Grazie! Ti contatterò al più presto.
-        </p>
-      )}
-      {status === "error" && (
-        <p className="text-red-600 text-sm mt-2">
-          Si è verificato un errore. Riprova più tardi.
-        </p>
-      )}
+      {status === "ok" && <p className="text-green-600 text-sm mt-2">Grazie! Ti contatterò al più presto.</p>}
+      {status === "error" && <p className="text-red-600 text-sm mt-2">Si è verificato un errore. Riprova più tardi.</p>}
     </form>
   );
 }
 
-// Componente per mostrare le offerte dinamiche lette da /offers.json.
-// Si divide in due colonne: Fibra/FWA e Luce/Gas (con eventuale dual).
-function Showcase({ brandMap }) {
-  const [offers, setOffers] = useState([]);
-  useEffect(() => {
-    fetch("/offers.json")
-      .then((r) => r.json())
-      .then(setOffers)
-      .catch(() => {});
-  }, []);
-  const telco = offers.filter((o) => o.category === "fiber" || o.category === "fwa");
-  const energy = offers.filter((o) =>
-    o.category === "electricity" || o.category === "gas" || o.category === "dual"
-  );
-  return (
-    <div className="grid lg:grid-cols-2 gap-8">
-      <div>
-        <h3 className="text-lg font-semibold">Fibra & FWA</h3>
-        <div className="mt-4 grid sm:grid-cols-2 gap-4">
-          {telco.map((o) => (
-            <div key={o.id} className="rounded-2xl border p-4 bg-white">
-              <div className="flex items-center justify-between">
-                <img src={brandMap[o.brand]} alt={o.brand} className="h-6 w-auto" />
-                <div className="font-semibold">€{o.price_month.toFixed(2)}/mese</div>
-              </div>
-              <div className="mt-1 text-sm text-zinc-700">{o.title}</div>
-              {o.promo_months ? (
-                <div className="text-xs text-zinc-600">Promo {o.promo_months} mesi</div>
-              ) : null}
-              {o.notes ? (
-                <div className="text-xs text-zinc-600">{o.notes}</div>
-              ) : null}
-            </div>
-          ))}
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold">Luce & Gas</h3>
-        <div className="mt-4 grid sm:grid-cols-2 gap-4">
-          {energy.map((o) => (
-            <div key={o.id} className="rounded-2xl border p-4 bg-white">
-              <div className="flex items-center justify-between">
-                <img src={brandMap[o.brand]} alt={o.brand} className="h-6 w-auto" />
-                <div className="font-semibold">da €{o.price_month.toFixed(2)}/mese</div>
-              </div>
-              <div className="mt-1 text-sm text-zinc-700">{o.title}</div>
-              {o.notes ? (
-                <div className="text-xs text-zinc-600">{o.notes}</div>
-              ) : null}
-            </div>
-          ))}
-        </div>
-        <div className="text-xs text-zinc-500 mt-2">*stima indicativa, varia per consumi</div>
-      </div>
-    </div>
-  );
-}
-
-/* ===== Page Component ===== */
+/* ===== Pagina ===== */
 export default function Page() {
-  // Stato per il calcolatore "quando cambiare"
   const [start, setStart] = useState(() => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -364,7 +267,6 @@ export default function Page() {
   const [bufferDays, setBufferDays] = useState(5);
   const [penalty, setPenalty] = useState(0);
 
-  // Calcola la data ideale per cambiare offerta considerando fine promo - buffer
   const resultDate = useMemo(() => {
     const s = new Date(start);
     if (isNaN(s.getTime())) return null;
@@ -374,7 +276,7 @@ export default function Page() {
   }, [start, months, bufferDays]);
 
   return (
-    <div>
+    <div className="min-h-screen">
       {/* Header */}
       <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-zinc-200">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
@@ -386,9 +288,8 @@ export default function Page() {
             <a href="#how" className="hover:text-blue-600">Come funziona</a>
             <a href="#telco" className="hover:text-blue-600">Fibra & FWA</a>
             <a href="#energy" className="hover:text-blue-600">Luce & Gas</a>
-            <a href="#offerte" className="hover:text-blue-600">Offerte</a>
             <a href="#whyfree" className="hover:text-blue-600">Perché gratis</a>
-            <a href="#contact" className="hover:text-blue-600">Contatti</a>
+            <a href="#lead" className="hover:text-blue-600">Contatti</a>
           </nav>
           <a href="#start" className="inline-flex items-center rounded-2xl bg-blue-600 px-4 py-2 text-white text-sm font-medium shadow-sm hover:bg-blue-700 transition">
             Inizia gratis
@@ -408,12 +309,8 @@ export default function Page() {
                 Bollette sotto controllo: confronto, attivazione e promemoria di cambio. Tu non pensi agli aumenti — ci penso io.
               </p>
               <div className="mt-6 flex gap-3">
-                <a href="#start" className="rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium shadow hover:bg-blue-700">
-                  Inizia gratis
-                </a>
-                <a href="#how" className="rounded-2xl border border-zinc-300 px-5 py-3 font-medium hover:border-zinc-400">
-                  Scopri come funziona
-                </a>
+                <a href="#start" className="rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium shadow hover:bg-blue-700">Inizia gratis</a>
+                <a href="#how" className="rounded-2xl border border-zinc-300 px-5 py-3 font-medium hover:border-zinc-400">Scopri come funziona</a>
               </div>
               <div className="mt-6 flex gap-3 text-sm">
                 <span className="inline-flex items-center gap-2 rounded-xl bg-green-100 px-3 py-1 text-green-800">✅ Servizio gratuito</span>
@@ -425,10 +322,10 @@ export default function Page() {
               <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
                 <div className="text-sm font-medium text-zinc-700 mb-3">Anteprima card offerte (solo FISSA)</div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <OfferCard logoName="TIM" logoSrc={BRANDS.TIM} title="Fibra 1Gb" price="€24,90/mese" promo="Promo 12 mesi – poi €29,90" change="11/10/2026" />
-                  <OfferCard logoName="Vodafone" logoSrc={BRANDS.Vodafone} title="Fibra 2.5Gb" price="€27,90/mese" promo="Promo 24 mesi – router incluso" change="07/09/2027" />
-                  <OfferCard logoName="Fastweb" logoSrc={BRANDS.Fastweb} title="FWA 300Mb" price="€22,95/mese" promo="Promo 12 mesi – modem incluso" change="02/04/2026" />
-                  <OfferCard logoName="WindTre" logoSrc={BRANDS.WindTre} title="Fibra 1Gb" price="€26,99/mese" promo="Promo 12 mesi – poi €29,99" change="15/06/2026" />
+                  <OfferCard logoName="TIM" title="Fibra 1Gb" price="€24,90/mese" promo="Promo 12 mesi – poi €29,90" change="11/10/2026" />
+                  <OfferCard logoName="Vodafone" title="Fibra 2.5Gb" price="€27,90/mese" promo="Promo 24 mesi – router incluso" change="07/09/2027" />
+                  <OfferCard logoName="Fastweb" title="FWA 300Mb" price="€22,95/mese" promo="Promo 12 mesi – modem incluso" change="02/04/2026" />
+                  <OfferCard logoName="WindTre" title="Fibra 1Gb" price="€26,99/mese" promo="Promo 12 mesi – poi €29,99" change="15/06/2026" />
                 </div>
               </div>
             </div>
@@ -461,18 +358,9 @@ export default function Page() {
             <a href="#start" className="hidden md:inline-flex rounded-2xl border border-zinc-300 px-4 py-2 font-medium hover:border-zinc-400">Calcola quando cambiare</a>
           </div>
           <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Offerte di base */}
-            <OfferCardDetailed logoName="TIM" logoSrc={BRANDS.TIM} title="Fibra 1Gb" price="€24,90/mese" promo="Promo 12 mesi – poi €29,90" change="11/10/2026" />
-            <OfferCardDetailed logoName="Vodafone" logoSrc={BRANDS.Vodafone} title="Fibra 2.5Gb" price="€27,90/mese" promo="Promo 24 mesi – router incluso" change="07/09/2027" />
-            <OfferCardDetailed logoName="Fastweb" logoSrc={BRANDS.Fastweb} title="FWA 300Mb" price="€22,95/mese" promo="Promo 12 mesi – modem incluso" change="02/04/2026" />
-            {/* Nuove offerte telco */}
-            <OfferCardDetailed logoName="Iliad" logoSrc={BRANDS.Iliad} title="Fibra 5Gb" price="€24,90/mese" promo="FTTH 5Gb – router incluso" change="—" />
-            <OfferCardDetailed logoName="Tiscali" logoSrc={BRANDS.Tiscali} title="UltraFibra" price="€27,95/mese" promo="FTTH 1Gb – router incluso" change="—" />
-            <OfferCardDetailed logoName="Sky" logoSrc={BRANDS.Sky} title="Sky WiFi" price="€29,90/mese" promo="FTTH 1Gb – router incluso" change="—" />
-            <OfferCardDetailed logoName="EOLO" logoSrc={BRANDS.EOLO} title="FWA 30Mb" price="€24,90/mese" promo="FWA 30Mb – router incluso" change="—" />
-            <OfferCardDetailed logoName="PosteCasa" logoSrc={BRANDS.PosteCasa} title="Ultraveloce" price="€26,90/mese" promo="FTTH 1Gb" change="—" />
-            <OfferCardDetailed logoName="Linkem" logoSrc={BRANDS.Linkem} title="Home 50Mb" price="€19,90/mese" promo="FWA 50Mb" change="—" />
-            <OfferCardDetailed logoName="Aruba" logoSrc={BRANDS.Aruba} title="Fibra 2.5Gb" price="€29,00/mese" promo="FTTH 2,5Gb" change="—" />
+            <OfferCardDetailed logoName="TIM" title="Fibra 1Gb" price="€24,90/mese" promo="Promo 12 mesi – poi €29,90" change="11/10/2026" />
+            <OfferCardDetailed logoName="Vodafone" title="Fibra 2.5Gb" price="€27,90/mese" promo="Promo 24 mesi – router incluso" change="07/09/2027" />
+            <OfferCardDetailed logoName="Fastweb" title="FWA 300Mb" price="€22,95/mese" promo="Promo 12 mesi – modem incluso" change="02/04/2026" />
           </div>
         </div>
       </section>
@@ -483,32 +371,11 @@ export default function Page() {
           <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Luce & Gas</h2>
           <p className="mt-2 text-zinc-700">Fisso o indicizzato? Valuto consumi e ti propongo un piano per bloccare gli aumenti.</p>
           <div className="mt-8 grid md:grid-cols-2 gap-6">
-            {/* Offerte energia esistenti */}
-            <EnergyCard provider="Enel Energia" logoSrc={BRANDS["Enel Energia"]} detail="PUN + 0,07 € / kWh" annual="€820" endPromo="02/2026" recommend="01/2026" />
-            <EnergyCard provider="Edison" logoSrc={BRANDS.Edison} detail="Prezzo fisso 12 mesi" annual="€690" endPromo="12/2025" recommend="11/2025" />
-            <EnergyCard provider="Plenitude" logoSrc={BRANDS.Plenitude} detail="Indicizzato PSV + spread" annual="€740" endPromo="—" recommend="Monitoraggio continuo" />
-            <EnergyCard provider="A2A Energia" logoSrc={BRANDS["A2A Energia"]} detail="Fisso 12 mesi luce+gas" annual="€1.420 (dual)" endPromo="09/2026" recommend="08/2026" />
-            {/* Nuove offerte energia */}
-            <EnergyCard provider="E.ON" logoSrc={BRANDS["E.ON"]} detail="PUN + 0,08 € / kWh" annual="€900" endPromo="—" recommend="Monitoraggio continuo" />
-            <EnergyCard provider="ENGIE" logoSrc={BRANDS.ENGIE} detail="Tariffa indicizzata" annual="€850" endPromo="—" recommend="Monitoraggio continuo" />
-            <EnergyCard provider="Acea" logoSrc={BRANDS.Acea} detail="Prezzo fisso 12 mesi" annual="€870" endPromo="11/2025" recommend="10/2025" />
-            <EnergyCard provider="Hera Comm" logoSrc={BRANDS["Hera Comm"]} detail="Indice PUN + spread" annual="€890" endPromo="03/2026" recommend="02/2026" />
-            <EnergyCard provider="Iren" logoSrc={BRANDS.Iren} detail="Fisso 12 mesi" annual="€880" endPromo="04/2026" recommend="03/2026" />
-            <EnergyCard provider="Illumia" logoSrc={BRANDS.Illumia} detail="Fisso 12 mesi" annual="€860" endPromo="—" recommend="Monitoraggio continuo" />
-            <EnergyCard provider="NeN" logoSrc={BRANDS.NeN} detail="Fisso 36 mesi" annual="€780" endPromo="—" recommend="Monitoraggio continuo" />
-            <EnergyCard provider="Pulsee" logoSrc={BRANDS.Pulsee} detail="Fisso 12 mesi" annual="€840" endPromo="—" recommend="Monitoraggio continuo" />
-            <EnergyCard provider="Dolomiti Energia" logoSrc={BRANDS["Dolomiti Energia"]} detail="Fisso 12 mesi" annual="€880" endPromo="—" recommend="Monitoraggio continuo" />
-            <EnergyCard provider="AGSM AIM" logoSrc={BRANDS["AGSM AIM"]} detail="Fisso 24 mesi" annual="€920" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="Enel Energia" detail="PUN + 0,07 € / kWh" annual="€820" endPromo="02/2026" recommend="01/2026" />
+            <EnergyCard provider="Edison" detail="Prezzo fisso 12 mesi" annual="€690" endPromo="12/2025" recommend="11/2025" />
+            <EnergyCard provider="Plenitude" detail="Indicizzato PSV + spread" annual="€740" endPromo="—" recommend="Monitoraggio continuo" />
+            <EnergyCard provider="A2A Energia" detail="Fisso 12 mesi luce+gas" annual="€1.420 (dual)" endPromo="09/2026" recommend="08/2026" />
           </div>
-        </div>
-      </section>
-
-      {/* Offerte aggiornate dinamiche */}
-      <section id="offerte" className="bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 py-16">
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Offerte aggiornate</h2>
-          <p className="mt-2 text-zinc-700">Dati sempre aggiornati dai principali operatori. Puoi aggiornare il file offers.json per tenere il comparatore al passo.</p>
-          <Showcase brandMap={BRANDS} />
         </div>
       </section>
 
@@ -536,26 +403,24 @@ export default function Page() {
             <div>
               <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Calcola quando cambiare</h2>
               <p className="mt-2 text-zinc-700">Inserisci i dati del tuo contratto: ti suggerisco la data ideale per lo switch, qualche giorno prima della fine promozione.</p>
-              <form className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-3xl border border-zinc-200 bg-gray-50 p-6" onSubmit={(e) => e.preventDefault()}>
+              <form className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-3xl border border-zinc-200 bg-gray-50 p-6" onSubmit={(e)=>e.preventDefault()}>
                 <label className="text-sm">
                   <span className="block mb-1 text-zinc-700">Data sottoscrizione</span>
-                  <input type="date" className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={start} onChange={(e) => setStart(e.target.value)} />
+                  <input type="date" className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={start} onChange={e=>setStart(e.target.value)} />
                 </label>
                 <label className="text-sm">
                   <span className="block mb-1 text-zinc-700">Durata promo (mesi)</span>
-                  <select className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={months} onChange={(e) => setMonths(Number(e.target.value))}>
-                    {[6, 12, 18, 24, 36].map((m) => (
-                      <option key={m} value={m}>{m}</option>
-                    ))}
+                  <select className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={months} onChange={e=>setMonths(Number(e.target.value))}>
+                    {[6,12,18,24,36].map(m => <option key={m} value={m}>{m}</option>)}
                   </select>
                 </label>
                 <label className="text-sm">
                   <span className="block mb-1 text-zinc-700">Buffer sicurezza (giorni)</span>
-                  <input type="number" min={0} max={30} className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={bufferDays} onChange={(e) => setBufferDays(Number(e.target.value))} />
+                  <input type="number" min={0} max={30} className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={bufferDays} onChange={e=>setBufferDays(Number(e.target.value))} />
                 </label>
                 <label className="text-sm">
                   <span className="block mb-1 text-zinc-700">Penale di recesso (stima)</span>
-                  <select className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={penalty} onChange={(e) => setPenalty(Number(e.target.value))}>
+                  <select className="w-full rounded-2xl border border-zinc-300 bg-white px-3 py-2" value={penalty} onChange={e=>setPenalty(Number(e.target.value))}>
                     <option value={0}>Nessuna / irrilevante</option>
                     <option value={20}>€20</option>
                     <option value={30}>€30</option>
@@ -568,11 +433,7 @@ export default function Page() {
                     {resultDate ? (
                       <div className="mt-1 text-lg">
                         Conviene cambiare intorno al <strong>{formatDate(resultDate)}</strong>
-                        {penalty > 0 && (
-                          <span className="block text-sm text-zinc-600">
-                            Nota: penale stimata €{penalty}. Verificheremo se conviene anticipare o posticipare lo switch.
-                          </span>
-                        )}
+                        {penalty > 0 && <span className="block text-sm text-zinc-600">Nota: penale stimata €{penalty}. Verificheremo se conviene anticipare o posticipare lo switch.</span>}
                       </div>
                     ) : (
                       <div className="mt-1 text-zinc-600">Inserisci una data valida.</div>
@@ -602,13 +463,19 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Lead form section */}
+      {/* Showcase dinamico da offers.json */}
+      <section id="offerte" className="bg-gray-50">
+        <div className="mx-auto max-w-7xl px-4 py-16">
+          <h2 className="text-2xl md:text-3xl font-semibold">Offerte aggiornate</h2>
+          <Showcase />
+        </div>
+      </section>
+
+      {/* Lead */}
       <section id="lead" className="bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-semibold">Analisi gratuita</h2>
-          <p className="mt-2 text-zinc-700">
-            Compila i campi: analizzerò la tua situazione e ti proporrò la migliore offerta.
-          </p>
+          <p className="mt-2 text-zinc-700">Compila i campi: analizzerò la tua situazione e ti proporrò la migliore offerta.</p>
           <LeadForm />
         </div>
       </section>
@@ -625,7 +492,7 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="bg-white border-t border-zinc-200">
+      <footer className="bg-white border-t border-zinc-200" id="contact">
         <div className="mx-auto max-w-7xl px-4 py-10 grid md:grid-cols-3 gap-6">
           <div>
             <div className="flex items-center gap-2">
