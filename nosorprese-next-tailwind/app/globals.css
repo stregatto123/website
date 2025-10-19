@@ -2,7 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Base minima per evitare glitch visivi */
 :root {
-  --bg: #f8fafc;
+  color-scheme: light;
 }
-html, body { background: var(--bg); }
+
+html, body {
+  @apply min-h-screen bg-gray-50 text-zinc-900 antialiased;
+}
+
+a {
+  @apply underline-offset-2;
+}
+
+/* Fix per immagini/loghi che altrimenti “saltano” */
+img {
+  @apply inline-block align-middle;
+}
