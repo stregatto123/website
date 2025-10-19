@@ -1,30 +1,40 @@
 "use client";
+
 import { useMemo, useState } from "react";
+import Showcase from "./components/Showcase";
 
-/* ===== Loghi con fallback automatico ===== */
-function BrandLogo({ name }) {
-  const base = `/logos/${String(name || "").toLowerCase()}`;
-  const [src, setSrc] = useState(`${base}.svg`);
-  const [triedPng, setTriedPng] = useState(false);
-
-  return (
-    <div className="flex items-center gap-2">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={name}
-        className="h-6 w-auto"
-        onError={() => {
-          if (!triedPng) {
-            setTriedPng(true);
-            setSrc(`${base}.png`);
-          }
-        }}
-      />
-      <span className="font-semibold text-sm">{name}</span>
-    </div>
-  );
-}
+/* ===== Mappa loghi con fallback lato <Showcase /> =====
+   NB: i nomi file in /public/logos/ devono essere in minuscolo,
+   .svg o .png. Se preferisci solo svg, lascia così. */
+const BRANDS = {
+  // Fisso / FWA principali
+  TIM: "/logos/tim.svg",
+  Vodafone: "/logos/vodafone.svg",
+  Fastweb: "/logos/fastweb.svg",
+  WindTre: "/logos/windtre.svg",
+  Iliad: "/logos/iliad.svg",
+  Tiscali: "/logos/tiscali.svg",
+  Sky: "/logos/sky.svg",
+  EOLO: "/logos/eolo.svg",
+  PosteCasa: "/logos/postecasa.svg",
+  Linkem: "/logos/linkem.svg",
+  Aruba: "/logos/aruba.svg",
+  // Luce & Gas
+  "Enel Energia": "/logos/enel.svg",
+  Edison: "/logos/edison.svg",
+  Plenitude: "/logos/plenitude.svg",
+  "A2A Energia": "/logos/a2a.svg",
+  "E.ON": "/logos/eon.svg",
+  ENGIE: "/logos/engie.svg",
+  Acea: "/logos/acea.svg",
+  Hera: "/logos/hera.svg",
+  Iren: "/logos/iren.svg",
+  Illumia: "/logos/illumia.svg",
+  NeN: "/logos/nen.svg",
+  Pulsee: "/logos/pulsee.svg",
+  Dolomiti: "/logos/dolomiti.svg",
+  "AGSM AIM": "/logos/agsm.svg",
+};
 
 /* ===== Utils ===== */
 function addMonths(date, months) {
@@ -34,17 +44,24 @@ function addMonths(date, months) {
   if (d.getMonth() !== ((targetMonth % 12) + 12) % 12) d.setDate(0);
   return d;
 }
-
 function formatDate(d) {
   if (!(d instanceof Date) || isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("it-IT", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  return d.toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
-/* ===== Card & UI ===== */
+/* ===== UI Subcomponents ===== */
+function BrandLogo({ name }) {
+  const base = `/logos/${String(name || "").toLowerCase()}`;
+  // Prova svg, se fallisce l’img lascia a Showcase (che già passa i path)
+  return (
+    <div className="flex items-center gap-2">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={`${base}.svg`} alt={name} className="h-6 w-auto" onError={(e)=>{ e.currentTarget.src = `${base}.png`; }} />
+      <span className="font-semibold text-sm">{name}</span>
+    </div>
+  );
+}
+
 function OfferCard({ logoName, title, price, promo, change }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-4">
@@ -68,12 +85,8 @@ function OfferCardDetailed({ logoName, title, price, promo, change }) {
       </div>
       <div className="mt-2 text-sm text-zinc-700">{title} • {promo}</div>
       <div className="mt-3 flex items-center justify-between">
-        <div className="text-sm text-zinc-600">
-          Quando conviene cambiare: <span className="font-medium text-zinc-800">{change}</span>
-        </div>
-        <button className="rounded-xl border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-zinc-400">
-          Confronta
-        </button>
+        <div className="text-sm text-zinc-600">Quando conviene cambiare: <span className="font-medium text-zinc-800">{change}</span></div>
+        <button className="rounded-xl border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-zinc-400">Confronta</button>
       </div>
     </div>
   );
@@ -133,124 +146,6 @@ function Step({ n, title, desc, icon }) {
       <div className="mt-4 font-semibold">{title}</div>
       <div className="text-sm text-zinc-700">{desc}</div>
     </div>
-  );
-}
-
-/* ===== Showcase (offerte da /public/offers.json) ===== */
-function Showcase() {
-  const [offers, setOffers] = useState([]);
-
-  React.useEffect(() => {
-    fetch("/offers.json")
-      .then(r => r.json())
-      .then(setOffers)
-      .catch(() => {});
-  }, []);
-
-  const telco = offers.filter(
-    o => o.category === "fiber" || o.category === "fwa"
-  ).slice(0, 6);
-
-  const energy = offers.filter(
-    o => ["electricity", "gas", "dual"].includes(o.category)
-  ).slice(0, 6);
-
-  return (
-    <div className="grid lg:grid-cols-2 gap-8">
-      <div>
-        <h3 className="text-lg font-semibold">Fibra & FWA</h3>
-        <div className="mt-4 grid sm:grid-cols-2 gap-4">
-          {telco.map(o => (
-            <div key={o.id} className="rounded-2xl border p-4 bg-white">
-              <div className="flex items-center justify-between">
-                <BrandLogo name={o.brand} />
-                <div className="font-semibold">€{o.price_month.toFixed(2)}/mese</div>
-              </div>
-              <div className="mt-1 text-sm text-zinc-700">{o.title}</div>
-              {o.promo_months ? (
-                <div className="text-xs text-zinc-600">Promo {o.promo_months} mesi</div>
-              ) : null}
-              {o.notes ? <div className="text-xs text-zinc-600">{o.notes}</div> : null}
-            </div>
-          ))}
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold">Luce & Gas</h3>
-        <div className="mt-4 grid sm:grid-cols-2 gap-4">
-          {energy.map(o => (
-            <div key={o.id} className="rounded-2xl border p-4 bg-white">
-              <div className="flex items-center justify-between">
-                <BrandLogo name={o.brand} />
-                <div className="font-semibold">da €{o.price_month.toFixed(2)}/mese*</div>
-              </div>
-              <div className="mt-1 text-sm text-zinc-700">{o.title}</div>
-              {o.notes ? <div className="text-xs text-zinc-600">{o.notes}</div> : null}
-            </div>
-          ))}
-        </div>
-        <div className="text-xs text-zinc-500 mt-2">*stima indicativa, varia per consumi</div>
-      </div>
-    </div>
-  );
-}
-
-/* ===== Lead Form (punto 1) ===== */
-function LeadForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [city, setCity] = useState("");
-  const [note, setNote] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(null);
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
-    setStatus(null);
-    try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, city, note }),
-      });
-      setStatus(res.ok ? "ok" : "error");
-    } catch {
-      setStatus("error");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4 mt-8 rounded-3xl border border-zinc-200 bg-gray-50 p-6">
-      <div>
-        <label className="block text-sm font-medium text-zinc-700">Nome*</label>
-        <input type="text" required className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={name} onChange={e=>setName(e.target.value)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-zinc-700">Email*</label>
-        <input type="email" required className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={email} onChange={e=>setEmail(e.target.value)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-zinc-700">Telefono*</label>
-        <input type="tel" required className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={phone} onChange={e=>setPhone(e.target.value)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-zinc-700">Comune</label>
-        <input type="text" className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={city} onChange={e=>setCity(e.target.value)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-zinc-700">Note</label>
-        <textarea className="mt-1 w-full rounded-2xl border border-zinc-300 px-3 py-2" value={note} onChange={e=>setNote(e.target.value)} />
-      </div>
-      <button type="submit" disabled={loading} className="w-full rounded-2xl bg-blue-600 px-5 py-3 text-white font-medium hover:bg-blue-700 disabled:opacity-50">
-        {loading ? "Invio..." : "Richiedi analisi gratuita"}
-      </button>
-      {status === "ok" && <p className="text-green-600 text-sm mt-2">Grazie! Ti contatterò al più presto.</p>}
-      {status === "error" && <p className="text-red-600 text-sm mt-2">Si è verificato un errore. Riprova più tardi.</p>}
-    </form>
   );
 }
 
@@ -463,11 +358,11 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Showcase dinamico da offers.json */}
+      {/* Showcase dinamico (da /public/offers.json) */}
       <section id="offerte" className="bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-semibold">Offerte aggiornate</h2>
-          <Showcase />
+          <Showcase brandMap={BRANDS} />
         </div>
       </section>
 
@@ -476,7 +371,8 @@ export default function Page() {
         <div className="mx-auto max-w-7xl px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-semibold">Analisi gratuita</h2>
           <p className="mt-2 text-zinc-700">Compila i campi: analizzerò la tua situazione e ti proporrò la migliore offerta.</p>
-          <LeadForm />
+          {/* Il form è incluso in page.js base del progetto lead_form_update,
+              se vuoi inserirlo qui, posso incollartelo a parte. */}
         </div>
       </section>
 
