@@ -1,17 +1,16 @@
-// This API route receives lead submissions and returns a simple response.
 export async function POST(request) {
   try {
     const data = await request.json();
-    // TODO: persist lead in a database or send notification
-    console.log('New lead submission:', data);
+    // TODO: salva su DB / invia email
+    console.log("Lead ricevuto:", data);
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     });
-  } catch (err) {
+  } catch (e) {
     return new Response(JSON.stringify({ ok: false }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      status: 400,
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
