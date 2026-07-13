@@ -1,12 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { COLORS } from "../lib/colors";
 
 export default function Hero() {
   const [on, setOn] = useState(false);
+  const [img1Loaded, setImg1Loaded] = useState(false);
+  const [img2Loaded, setImg2Loaded] = useState(false);
+  const img1Ref = useRef(null);
+  const img2Ref = useRef(null);
   useEffect(() => { setTimeout(() => setOn(true), 100); }, []);
+  useEffect(() => {
+    if (img1Ref.current && img1Ref.current.complete) setImg1Loaded(true);
+    if (img2Ref.current && img2Ref.current.complete) setImg2Loaded(true);
+  }, []);
 
   return (
     <section id="hero" style={{
@@ -19,10 +27,20 @@ export default function Hero() {
         display: "grid", gridTemplateRows: "1fr 1fr", gap: 2, opacity: 0.5,
       }}>
         <div style={{ overflow: "hidden" }}>
-          <img src="/images/mozzarella-hero.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img ref={img1Ref} src="/images/mozzarella-hero.png" alt="" onLoad={() => setImg1Loaded(true)}
+            style={{
+              width: "100%", height: "100%", objectFit: "cover",
+              opacity: img1Loaded ? 1 : 0, transform: img1Loaded ? "scale(1)" : "scale(1.06)",
+              transition: "opacity 0.8s ease, transform 1.2s ease",
+            }} />
         </div>
         <div style={{ overflow: "hidden" }}>
-          <img src="/images/salame.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img ref={img2Ref} src="/images/salame.png" alt="" onLoad={() => setImg2Loaded(true)}
+            style={{
+              width: "100%", height: "100%", objectFit: "cover",
+              opacity: img2Loaded ? 1 : 0, transform: img2Loaded ? "scale(1)" : "scale(1.06)",
+              transition: "opacity 0.8s ease 0.1s, transform 1.2s ease 0.1s",
+            }} />
         </div>
         <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to right, ${COLORS.oliveDark} 0%, transparent 55%)` }} />
       </div>
@@ -60,14 +78,14 @@ export default function Hero() {
           </p>
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", opacity: on ? 1 : 0, transition: "all 0.8s 0.5s" }}>
-            <Link href="/catalogo" style={{
+            <Link href="/catalogo" className="btn-lift" style={{
               background: COLORS.gold, color: COLORS.oliveDark,
               padding: "14px 30px", borderRadius: 4,
               fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13, fontWeight: 700,
               letterSpacing: "0.08em", textTransform: "uppercase",
               textDecoration: "none",
             }}>Scopri il Catalogo</Link>
-            <Link href="/contatti" style={{
+            <Link href="/contatti" className="btn-lift" style={{
               border: "1.5px solid rgba(255,255,255,0.4)", color: "#fff",
               padding: "14px 30px", borderRadius: 4,
               fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13, fontWeight: 600,

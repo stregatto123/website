@@ -59,22 +59,22 @@ export default function Nav() {
 
         <div style={{ display: "flex", gap: 32, alignItems: "center" }} className="desktop-nav">
           {links.map(l => (
-            <Link key={l.href} href={l.href} style={{
+            <Link key={l.href} href={l.href} className={pathname === l.href ? "" : "nav-link"} style={{
               fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13, fontWeight: 600,
               letterSpacing: "0.07em", textTransform: "uppercase",
               background: "none", border: "none", cursor: "pointer",
               color: pathname === l.href ? COLORS.olive : (dark ? COLORS.charcoal : "rgba(255,255,255,0.85)"),
               borderBottom: pathname === l.href ? `2px solid ${COLORS.olive}` : "2px solid transparent",
-              paddingBottom: 2, transition: "all 0.25s",
+              paddingBottom: 2, transition: "color 0.25s",
               textDecoration: "none",
             }}>{l.label}</Link>
           ))}
-          <Link href="/contatti" style={{
+          <Link href="/contatti" className="btn-lift" style={{
             background: COLORS.gold, color: COLORS.oliveDark,
             padding: "10px 22px", borderRadius: 4,
             fontFamily: "var(--font-dmsans), sans-serif", fontSize: 12, fontWeight: 700,
             letterSpacing: "0.09em", textTransform: "uppercase",
-            border: "none", cursor: "pointer", transition: "all 0.2s",
+            border: "none", cursor: "pointer",
             textDecoration: "none",
           }}>Richiedi Preventivo</Link>
         </div>

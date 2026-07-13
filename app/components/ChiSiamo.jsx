@@ -1,7 +1,23 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "../lib/useInView";
 import { COLORS } from "../lib/colors";
+
+function FadeImg({ src }) {
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef(null);
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) setLoaded(true);
+  }, []);
+  return (
+    <img ref={imgRef} src={src} alt="" onLoad={() => setLoaded(true)}
+      style={{
+        width: "100%", height: "100%", objectFit: "cover",
+        opacity: loaded ? 1 : 0, transition: "opacity 0.6s ease",
+      }} />
+  );
+}
 
 export default function ChiSiamo({ standalone = false }) {
   const [ref, inView] = useInView();
@@ -32,6 +48,8 @@ export default function ChiSiamo({ standalone = false }) {
             <div key={la} style={{
               display: "flex", alignItems: "center", gap: 14, marginBottom: 16,
               paddingBottom: 16, borderBottom: i < 2 ? `1px solid ${COLORS.lightGray}` : "none",
+              opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-12px)",
+              transition: `all 0.5s ease ${0.15 + i * 0.12}s`,
             }}>
               <span style={{ fontSize: 20 }}>{ic}</span>
               <span style={{ fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13, color: COLORS.charcoal, fontWeight: 600 }}>{la}</span>
@@ -42,9 +60,9 @@ export default function ChiSiamo({ standalone = false }) {
           display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10,
           opacity: inView ? 1 : 0, transition: "all 0.7s ease 0.15s",
         }}>
-          {["/images/bufala.png", "/images/salame.png", "/images/bresaola.png", "/images/funghi.svg"].map((img, i) => (
+          {["/images/bufala.png", "/images/salame.png", "/images/bresaola.png", "/images/scamorza.png"].map((img, i) => (
             <div key={i} style={{ borderRadius: 8, overflow: "hidden", height: 170 }}>
-              <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <FadeImg src={img} />
             </div>
           ))}
         </div>

@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { COLORS } from "../../lib/colors";
 
 export default function ProductCard({ item, accentColor, delay, inView, onOpenModal }) {
   const [imgErr, setImgErr] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const [hover, setHover] = useState(false);
+  const imgRef = useRef(null);
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) setImgLoaded(true);
+  }, []);
 
   return (
     <div
@@ -27,11 +32,12 @@ export default function ProductCard({ item, accentColor, delay, inView, onOpenMo
       {/* Image */}
       <div style={{ height: 150, overflow: "hidden", position: "relative", background: `${accentColor}10`, flexShrink: 0 }}>
         {item.img && !imgErr ? (
-          <img src={item.img} alt={item.name} onError={() => setImgErr(true)}
+          <img ref={imgRef} src={item.img} alt={item.name} onError={() => setImgErr(true)} onLoad={() => setImgLoaded(true)}
             style={{
               width: "100%", height: "100%", objectFit: "cover",
-              transform: hover ? "scale(1.06)" : "scale(1)",
-              transition: "transform 0.4s ease",
+              opacity: imgLoaded ? 1 : 0,
+              transform: hover ? "scale(1.06)" : imgLoaded ? "scale(1)" : "scale(1.03)",
+              transition: "transform 0.4s ease, opacity 0.35s ease",
             }} />
         ) : (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>

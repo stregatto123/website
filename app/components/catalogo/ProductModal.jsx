@@ -1,17 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { COLORS } from "../../lib/colors";
 
 export default function ProductModal({ item, accentColor, onClose }) {
   const [imgErr, setImgErr] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const imgRef = useRef(null);
   useEffect(() => {
     const fn = (e) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", fn);
     document.body.style.overflow = "hidden";
     return () => { document.removeEventListener("keydown", fn); document.body.style.overflow = ""; };
   }, [onClose]);
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) setImgLoaded(true);
+  }, []);
 
   return (
     <div onClick={onClose} style={{
@@ -30,8 +35,11 @@ export default function ProductModal({ item, accentColor, onClose }) {
         {/* Image */}
         <div style={{ height: 220, overflow: "hidden", position: "relative", background: `${accentColor}12` }}>
           {item.img && !imgErr ? (
-            <img src={item.img} alt={item.name} onError={() => setImgErr(true)}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img ref={imgRef} src={item.img} alt={item.name} onError={() => setImgErr(true)} onLoad={() => setImgLoaded(true)}
+              style={{
+                width: "100%", height: "100%", objectFit: "cover",
+                opacity: imgLoaded ? 1 : 0, transition: "opacity 0.4s ease",
+              }} />
           ) : (
             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 56 }}>
               {accentColor === COLORS.gold ? "🧀" : accentColor === COLORS.tomato ? "🥩" : "🍅"}
@@ -69,7 +77,7 @@ export default function ProductModal({ item, accentColor, onClose }) {
               }}>{t}</span>
             ))}
           </div>
-          <Link href="/contatti" onClick={onClose} style={{
+          <Link href="/contatti" onClick={onClose} className="btn-lift" style={{
             display: "block", textAlign: "center",
             background: accentColor, color: "#fff",
             padding: "13px", borderRadius: 8,

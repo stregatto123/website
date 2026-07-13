@@ -155,6 +155,7 @@ export default function ContactForm() {
                   <button
                     onClick={handleSubmit}
                     disabled={status === "sending"}
+                    className="btn-lift"
                     style={{
                       background: form.nome && form.email ? COLORS.olive : "#ccc",
                       color: "#fff", padding: "14px", borderRadius: 6,

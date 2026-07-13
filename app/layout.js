@@ -2,6 +2,7 @@ import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import PageFade from "./components/PageFade";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -34,7 +35,7 @@ export default function RootLayout({ children }) {
     <html lang="it" className={`${playfair.variable} ${dmSans.variable}`}>
       <body style={{ background: "#FFFDF8", minHeight: "100vh" }}>
         <Nav />
-        {children}
+        <PageFade>{children}</PageFade>
         <Footer />
       </body>
     </html>
