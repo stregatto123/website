@@ -43,36 +43,36 @@ const products = {
       {
         title: "Formaggi Freschi",
         items: [
-          { name: "Ricotta da Lavorazione", desc: "Sottovuoto · Circa 4/5 Kg — Ideale per ripieni", tags: ["Sottovuoto", "Ideale per ripieni"], img: "/images/mozzarella-fette.png" },
-          { name: "Stracchino Panetto", desc: "1 Kg", tags: ["1 Kg"], img: "/images/mozzarella-fette.png" },
-          { name: "Stracchino in Vasca", desc: "Vaschetta · Circa 2 Kg — Da lavorazione", tags: ["Vaschetta", "Da lavorazione"], img: "/images/mozzarella-fette.png" },
-          { name: "Gorgonzola DOP 1/8", desc: "Sostenuta · Circa 1,5 Kg", tags: ["Sostenuta"], img: "/images/mozzarella-fette.png" }]
+          { name: "Ricotta da Lavorazione", desc: "Sottovuoto · Circa 4/5 Kg — Ideale per ripieni", tags: ["Sottovuoto", "Ideale per ripieni"], img: "/images/formaggio-fresco.svg" },
+          { name: "Stracchino Panetto", desc: "1 Kg", tags: ["1 Kg"], img: "/images/formaggio-fresco.svg" },
+          { name: "Stracchino in Vasca", desc: "Vaschetta · Circa 2 Kg — Da lavorazione", tags: ["Vaschetta", "Da lavorazione"], img: "/images/formaggio-fresco.svg" },
+          { name: "Gorgonzola DOP 1/8", desc: "Sostenuta · Circa 1,5 Kg", tags: ["Sostenuta"], img: "/images/formaggio-fresco.svg" }]
       },
       {
         title: "Formaggi Stagionati",
         items: [
-          { name: "Gorgonzola Igorcreme 1/8", desc: "Più morbida · Circa 1,5 Kg", tags: ["Più morbida"], img: "/images/mozzarella-fette.png" },
-          { name: "Edamer Intero", desc: "Circa 3 Kg", tags: ["Circa 3 Kg"], img: "/images/mozzarella-fette.png" },
-          { name: "Edamer a Fette", desc: "Vaschetta 1 Kg — Pronto all'uso", tags: ["Vaschetta 1 Kg", "Pronto all'uso"], img: "/images/mozzarella-fette.png" },
-          { name: "Brie", desc: "Forma · Circa 1 Kg", tags: ["Forma"], img: "/images/mozzarella-fette.png" },
-          { name: "Taleggio DOP", desc: "Forma intera · Circa 2 Kg", tags: ["Forma intera"], img: "/images/mozzarella-fette.png" },
-          { name: "Mascarpone", desc: "Vaschetta 500 gr", tags: ["Vaschetta 500 gr"], img: "/images/mozzarella-fette.png" },
-          { name: "Grana Padano DOP 1/16", desc: "Spicchio · Circa 1 Kg", tags: ["Spicchio"], img: "/images/mozzarella-hero.png" },
-          { name: "Grana Padano DOP a Scaglie", desc: "Vaschetta 500 gr — Pronto all'uso", tags: ["Vaschetta 500 gr", "Pronto all'uso"], img: "/images/mozzarella-hero.png" },
-          { name: "Grana Padano DOP Grattugiato", desc: "Busta 1 Kg — 100% Grana Padano", tags: ["Busta 1 Kg", "100% Grana Padano"], img: "/images/mozzarella-hero.png" },
-          { name: "Parmigiano Reggiano DOP 24 Mesi", desc: "Spicchio 1/8 · Circa 5 Kg — Alta stagionatura per cucina e taglieri", tags: ["Spicchio 1/8", "Alta stagionatura per "], img: "/images/mozzarella-hero.png" },
-          { name: "Fontal ¼", desc: "Spicchio · Circa 3 Kg", tags: ["Spicchio"], img: "/images/mozzarella-fette.png" }]
+          { name: "Gorgonzola Igorcreme 1/8", desc: "Più morbida · Circa 1,5 Kg", tags: ["Più morbida"], img: "/images/formaggio-stagionato.svg" },
+          { name: "Edamer Intero", desc: "Circa 3 Kg", tags: ["Circa 3 Kg"], img: "/images/formaggio-stagionato.svg" },
+          { name: "Edamer a Fette", desc: "Vaschetta 1 Kg — Pronto all'uso", tags: ["Vaschetta 1 Kg", "Pronto all'uso"], img: "/images/formaggio-stagionato.svg" },
+          { name: "Brie", desc: "Forma · Circa 1 Kg", tags: ["Forma"], img: "/images/formaggio-stagionato.svg" },
+          { name: "Taleggio DOP", desc: "Forma intera · Circa 2 Kg", tags: ["Forma intera"], img: "/images/formaggio-stagionato.svg" },
+          { name: "Mascarpone", desc: "Vaschetta 500 gr", tags: ["Vaschetta 500 gr"], img: "/images/panna-burro.svg" },
+          { name: "Grana Padano DOP 1/16", desc: "Spicchio · Circa 1 Kg", tags: ["Spicchio"], img: "/images/formaggio-stagionato.svg" },
+          { name: "Grana Padano DOP a Scaglie", desc: "Vaschetta 500 gr — Pronto all'uso", tags: ["Vaschetta 500 gr", "Pronto all'uso"], img: "/images/formaggio-stagionato.svg" },
+          { name: "Grana Padano DOP Grattugiato", desc: "Busta 1 Kg — 100% Grana Padano", tags: ["Busta 1 Kg", "100% Grana Padano"], img: "/images/formaggio-stagionato.svg" },
+          { name: "Parmigiano Reggiano DOP 24 Mesi", desc: "Spicchio 1/8 · Circa 5 Kg — Alta stagionatura per cucina e taglieri", tags: ["Spicchio 1/8", "Alta stagionatura per "], img: "/images/formaggio-stagionato.svg" },
+          { name: "Fontal ¼", desc: "Spicchio · Circa 3 Kg", tags: ["Spicchio"], img: "/images/formaggio-stagionato.svg" }]
       },
       {
         title: "Panna, Burro & Pecorini",
         items: [
-          { name: "Panna da Cucina", desc: "Brik 200 ml", tags: ["Brik 200 ml"], img: "/images/mozzarella-fette.png" },
-          { name: "Panna da Cucina", desc: "Brik 500 ml", tags: ["Brik 500 ml"], img: "/images/mozzarella-fette.png" },
-          { name: "Burro", desc: "Panetto 1 Kg", tags: ["Panetto 1 Kg"], img: "/images/mozzarella-fette.png" },
-          { name: "Formaggio Spalmabile", desc: "Secchiello/Vasca 1,5 Kg — Tipo \"Philadelphia\"", tags: ["Secchiello/Vasca 1,5 Kg", "Tipo \"Philadelphia\""], img: "/images/mozzarella-fette.png" },
-          { name: "Panna da Montare UHT", desc: "Brik 1 Litro", tags: ["Brik 1 Litro"], img: "/images/mozzarella-fette.png" },
-          { name: "Pecorino Sardo Dolce DOP", desc: "Giovane · Circa 1,8 Kg", tags: ["Giovane"], img: "/images/mozzarella-fette.png" },
-          { name: "Pecorino Sardo Stagionato DOP", desc: "Semistagionato · Circa 3 Kg", tags: ["Semistagionato"], img: "/images/mozzarella-fette.png" }]
+          { name: "Panna da Cucina", desc: "Brik 200 ml", tags: ["Brik 200 ml"], img: "/images/panna-burro.svg" },
+          { name: "Panna da Cucina", desc: "Brik 500 ml", tags: ["Brik 500 ml"], img: "/images/panna-burro.svg" },
+          { name: "Burro", desc: "Panetto 1 Kg", tags: ["Panetto 1 Kg"], img: "/images/panna-burro.svg" },
+          { name: "Formaggio Spalmabile", desc: "Secchiello/Vasca 1,5 Kg — Tipo \"Philadelphia\"", tags: ["Secchiello/Vasca 1,5 Kg", "Tipo \"Philadelphia\""], img: "/images/panna-burro.svg" },
+          { name: "Panna da Montare UHT", desc: "Brik 1 Litro", tags: ["Brik 1 Litro"], img: "/images/panna-burro.svg" },
+          { name: "Pecorino Sardo Dolce DOP", desc: "Giovane · Circa 1,8 Kg", tags: ["Giovane"], img: "/images/pecorino.svg" },
+          { name: "Pecorino Sardo Stagionato DOP", desc: "Semistagionato · Circa 3 Kg", tags: ["Semistagionato"], img: "/images/pecorino.svg" }]
       }]
   },
   salumi: {
@@ -107,9 +107,9 @@ const products = {
       {
         title: "Arrosti, Speck & Mortadella",
         items: [
-          { name: "Arrosto di Tacchino", desc: "A metà sottovuoto · Peso Variabile — Leggero e delicato", tags: ["A metà sottovuoto", "Leggero e delicato"], img: "/images/salumi-misti.png" },
-          { name: "Arrosto di Tacchino Lenta Cottura", desc: "Intero · Circa 3 Kg — Novità — maggiore morbidezza e resa", tags: ["Intero", "Novità — maggiore morb"], img: "/images/salumi-misti.png" },
-          { name: "Speck ½", desc: "A metà sottovuoto · Circa 2 Kg", tags: ["A metà sottovuoto"], img: "/images/salumi-misti.png" },
+          { name: "Arrosto di Tacchino", desc: "A metà sottovuoto · Peso Variabile — Leggero e delicato", tags: ["A metà sottovuoto", "Leggero e delicato"], img: "/images/pollame-arrosto.svg" },
+          { name: "Arrosto di Tacchino Lenta Cottura", desc: "Intero · Circa 3 Kg — Novità — maggiore morbidezza e resa", tags: ["Intero", "Novità — maggiore morb"], img: "/images/pollame-arrosto.svg" },
+          { name: "Speck ½", desc: "A metà sottovuoto · Circa 2 Kg", tags: ["A metà sottovuoto"], img: "/images/carne-pronta.svg" },
           { name: "Mortadella con Pistacchi", desc: "A metà sottovuoto · Circa 1,5 Kg — Ricavata da forma da 3 Kg c.a.", tags: ["A metà sottovuoto", "Ricavata da forma da 3"], img: "/images/mortadella.svg" }]
       },
       {
@@ -121,8 +121,8 @@ const products = {
           { name: "Salame Crespone Casereccio", desc: "A metà sottovuoto · Circa 1,4 Kg", tags: ["A metà sottovuoto"], img: "/images/salame.png" },
           { name: "Salame Napoli", desc: "A metà sottovuoto · Circa 1 Kg", tags: ["A metà sottovuoto"], img: "/images/salame.png" },
           { name: "'Nduja", desc: "Sottovuoto · Circa 0,4 Kg — Tipica calabrese", tags: ["Sottovuoto", "Tipica calabrese"], img: "/images/salame.png" },
-          { name: "Wurstel Puro Suino", desc: "Confezione 250 gr — Venduto al chilo", tags: ["Confezione 250 gr", "Venduto al chilo"], img: "/images/salumi-misti.png" },
-          { name: "Wurstel Pollo e Tacchino", desc: "Confezione 250 gr — Venduto al chilo", tags: ["Confezione 250 gr", "Venduto al chilo"], img: "/images/salumi-misti.png" },
+          { name: "Wurstel Puro Suino", desc: "Confezione 250 gr — Venduto al chilo", tags: ["Confezione 250 gr", "Venduto al chilo"], img: "/images/wurstel.svg" },
+          { name: "Wurstel Pollo e Tacchino", desc: "Confezione 250 gr — Venduto al chilo", tags: ["Confezione 250 gr", "Venduto al chilo"], img: "/images/wurstel.svg" },
           { name: "Spianata Calabra Piccante", desc: "Sottovuoto · Circa 2 Kg — Linea competitiva", tags: ["Sottovuoto", "Linea competitiva"], img: "/images/salame.png" },
           { name: "Spianata Piccante", desc: "Sottovuoto · Circa 2 Kg — Alta qualità, stagionatura garantita", tags: ["Sottovuoto", "Alta qualità, stagiona"], img: "/images/salame.png" }]
       },
@@ -133,10 +133,10 @@ const products = {
           { name: "Salame tipo Napoli Piccante (fetta rotonda)", desc: "Sottovuoto · Circa 1 Kg — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Prodotto a disponibili"], img: "/images/salame.png" },
           { name: "Capocollo Piccante", desc: "Sottovuoto · Circa 1,7 Kg", tags: ["Sottovuoto"], img: "/images/salame.png" },
           { name: "Guanciale Nazionale", desc: "Sottovuoto · Circa 1,3 Kg", tags: ["Sottovuoto"], img: "/images/pancetta.svg" },
-          { name: "Porchetta Trancio", desc: "Sottovuoto · Circa 2/3 Kg — Pronta all'uso", tags: ["Sottovuoto", "Pronta all'uso"], img: "/images/salumi-misti.png" },
-          { name: "Manzo Stufato", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/salumi-misti.png" },
-          { name: "Roast-Beef", desc: "Sottovuoto · Circa 3 Kg", tags: ["Sottovuoto"], img: "/images/salumi-misti.png" },
-          { name: "Carne Salada", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/salumi-misti.png" },
+          { name: "Porchetta Trancio", desc: "Sottovuoto · Circa 2/3 Kg — Pronta all'uso", tags: ["Sottovuoto", "Pronta all'uso"], img: "/images/carne-pronta.svg" },
+          { name: "Manzo Stufato", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/carne-pronta.svg" },
+          { name: "Roast-Beef", desc: "Sottovuoto · Circa 3 Kg", tags: ["Sottovuoto"], img: "/images/carne-pronta.svg" },
+          { name: "Carne Salada", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/carne-pronta.svg" },
           { name: "Carpaccio di Bresaola", desc: "Sottovuoto · Peso Variabile — Per taglieri e carpacci gourmet", tags: ["Sottovuoto", "Per taglieri e carpacc"], img: "/images/bresaola.png" },
           { name: "Guanciale Stagionato", desc: "A metà sottovuoto · Circa 1 Kg — Ideale per carbonara e amatriciana", tags: ["A metà sottovuoto", "Ideale per carbonara e"], img: "/images/pancetta.svg" }]
       }]
@@ -195,7 +195,7 @@ const products = {
           { name: "Salsa Tartufata Scura", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.svg" },
           { name: "Salsa Tartufata Chiara", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.svg" },
           { name: "Crema di Porcini", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.svg" },
-          { name: "Friarielli", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/carciofi.svg" },
+          { name: "Friarielli", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/verdure.svg" },
           { name: "Scarole alla Napoletana", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/scarola.jpg" },
           { name: "Pomodorini Rossi Semidried", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/pomodori.svg" },
           { name: "Pomodorini Gialli Semidried", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/pomodori.svg" }]
