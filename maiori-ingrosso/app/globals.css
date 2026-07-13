@@ -1,21 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Base minima per evitare glitch visivi */
 :root {
   color-scheme: light;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html, body {
-  @apply min-h-screen bg-gray-50 text-zinc-900 antialiased;
+  min-height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-a {
-  @apply underline-offset-2;
-}
-
-/* Fix per immagini/loghi che altrimenti “saltano” */
 img {
-  @apply inline-block align-middle;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
 }

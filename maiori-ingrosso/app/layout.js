@@ -1,3 +1,22 @@
+import { Playfair_Display, DM_Sans } from "next/font/google";
+import "./globals.css";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer";
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dmsans",
+  display: "swap",
+});
+
 export const metadata = {
   title: "Ingrosso Alimentari MAIORI",
   description:
@@ -10,13 +29,13 @@ export const metadata = {
   },
 };
 
-import "./globals.css";
-
 export default function RootLayout({ children }) {
   return (
-    <html lang="it">
-      <body className="min-h-screen bg-gray-50 text-zinc-900 antialiased">
+    <html lang="it" className={`${playfair.variable} ${dmSans.variable}`}>
+      <body style={{ background: "#FFFDF8", minHeight: "100vh" }}>
+        <Nav />
         {children}
+        <Footer />
       </body>
     </html>
   );
