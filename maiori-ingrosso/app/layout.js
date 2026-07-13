@@ -1,10 +1,11 @@
 export const metadata = {
-  title: "NoSorprese Broker",
-  description: "Fibra, FWA, Luce & Gas senza sorprese. Consulente indipendente.",
+  title: "Ingrosso Alimentari MAIORI",
+  description:
+    "Ingrosso alimentare: formaggi, salumi e conserve selezionate per bar, ristoranti, pizzerie e gastronomie.",
   metadataBase: new URL("https://example.com"),
   openGraph: {
-    title: "NoSorprese Broker",
-    description: "Sempre l’offerta migliore. Per davvero.",
+    title: "Ingrosso Alimentari MAIORI",
+    description: "Formaggi, salumi e conserve selezionate. Prezzi riservati ai professionisti.",
     type: "website",
   },
 };

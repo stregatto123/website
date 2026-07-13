@@ -1,8 +1,8 @@
 export async function POST(request) {
   try {
     const data = await request.json();
-    // TODO: salva su DB / invia email
-    console.log("Lead ricevuto:", data);
+    // TODO: salva su DB / invia email al reparto commerciale
+    console.log("Richiesta listino/contatto ricevuta:", data);
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
