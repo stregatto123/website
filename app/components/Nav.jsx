@@ -79,10 +79,16 @@ export default function Nav() {
           }}>Richiedi Preventivo</Link>
         </div>
 
-        <button onClick={() => setOpen(!open)} style={{
-          display: "none", background: "none", border: "none",
-          cursor: "pointer", padding: 8,
-        }} className="burger">
+        <button
+          onClick={() => setOpen(!open)}
+          aria-label={open ? "Chiudi menu" : "Apri menu"}
+          aria-expanded={open}
+          style={{
+            display: "none", background: "none", border: "none",
+            cursor: "pointer", padding: 10,
+            width: 44, height: 44,
+            flexDirection: "column", alignItems: "center", justifyContent: "center",
+          }} className="burger">
           {[0, 1, 2].map(i => (
             <div key={i} style={{
               width: 24, height: 2, marginBottom: i < 2 ? 5 : 0,
@@ -119,7 +125,7 @@ export default function Nav() {
       )}
 
       <style>{`
-        @media(max-width:768px){.desktop-nav{display:none!important}.burger{display:block!important}}
+        @media(max-width:768px){.desktop-nav{display:none!important}.burger{display:flex!important}}
       `}</style>
     </nav>
   );

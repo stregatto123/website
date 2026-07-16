@@ -14,9 +14,21 @@ export default function ProductCard({ item, accentColor, delay, inView, onOpenMo
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`${item.name} — apri dettagli`}
       onClick={() => onOpenModal(item)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpenModal(item);
+        }
+      }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onFocus={() => setHover(true)}
+      onBlur={() => setHover(false)}
+      className="focusable-card"
       style={{
         borderRadius: 12, overflow: "hidden",
         background: "#fff",

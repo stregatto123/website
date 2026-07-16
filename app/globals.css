@@ -64,3 +64,26 @@ img {
 .nav-link:hover::after {
   right: 0;
 }
+
+/* Visible keyboard focus indicator, used on custom interactive elements
+   (plain divs acting as buttons) that don't get a native focus ring. */
+:focus-visible {
+  outline: 2px solid #3A4425;
+  outline-offset: 2px;
+}
+
+.focusable-card:focus-visible {
+  outline: 2px solid #3A4425;
+  outline-offset: 3px;
+}
+
+/* Respect the OS "reduce motion" accessibility preference: remove
+   scroll/entrance/hover animations and transitions site-wide. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

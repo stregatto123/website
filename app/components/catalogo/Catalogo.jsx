@@ -52,7 +52,12 @@ export default function Catalogo() {
               position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
               fontSize: 16, pointerEvents: "none",
             }}>🔍</span>
+            <label htmlFor="catalogo-search" style={{
+              position: "absolute", width: 1, height: 1, padding: 0, margin: -1,
+              overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0,
+            }}>Cerca un prodotto</label>
             <input
+              id="catalogo-search"
               type="text"
               placeholder="Cerca un prodotto... es. mozzarella, tonno"
               value={search}
@@ -70,8 +75,9 @@ export default function Catalogo() {
               onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.15)"}
             />
             {search && (
-              <button onClick={() => setSearch("")} style={{
-                position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+              <button onClick={() => setSearch("")} aria-label="Cancella ricerca" style={{
+                position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)",
+                width: 40, height: 40,
                 background: "none", border: "none", cursor: "pointer",
                 color: "rgba(255,255,255,0.5)", fontSize: 16,
               }}>✕</button>

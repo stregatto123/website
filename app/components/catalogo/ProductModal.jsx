@@ -48,9 +48,9 @@ export default function ProductModal({ item, accentColor, onClose }) {
           {/* Color bar */}
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 4, background: accentColor }} />
           {/* Close btn */}
-          <button onClick={onClose} style={{
-            position: "absolute", top: 12, right: 12,
-            width: 32, height: 32, borderRadius: "50%",
+          <button onClick={onClose} aria-label="Chiudi" style={{
+            position: "absolute", top: 8, right: 8,
+            width: 44, height: 44, borderRadius: "50%",
             background: "rgba(0,0,0,0.4)", border: "none", cursor: "pointer",
             color: "#fff", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
           }}>✕</button>

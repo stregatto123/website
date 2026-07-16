@@ -8,6 +8,6 @@ export const COLORS = {
   gold: "#C9A84C",
   goldLight: "#E8C87A",
   charcoal: "#2C2C2C",
-  gray: "#7A7A7A",
+  gray: "#6B6B6B",
   lightGray: "#E8E4DC",
 };
