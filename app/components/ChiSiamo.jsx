@@ -1,73 +1,102 @@
-"use client";
+import { Handshake, Leaf, PackageSearch } from "lucide-react";
+import { cn } from "../lib/cn";
+import Reveal from "./Reveal";
 
-import { useEffect, useRef, useState } from "react";
-import { useInView } from "../lib/useInView";
-import { COLORS } from "../lib/colors";
+const values = [
+  {
+    Icon: Leaf,
+    title: "Filiere selezionate",
+    text: "Lavoriamo con caseifici e salumifici scelti, privilegiando costanza qualitativa e tracciabilità.",
+  },
+  {
+    Icon: PackageSearch,
+    title: "Assortimento da ristorazione",
+    text: "Formati, pezzature e tagli pensati per la cucina professionale, non per lo scaffale.",
+  },
+  {
+    Icon: Handshake,
+    title: "Referente dedicato",
+    text: "Una persona che conosce il tuo locale e risponde davvero. Nessun call center.",
+  },
+];
 
-function FadeImg({ src }) {
-  const [loaded, setLoaded] = useState(false);
-  const imgRef = useRef(null);
-  useEffect(() => {
-    if (imgRef.current && imgRef.current.complete) setLoaded(true);
-  }, []);
-  return (
-    <img ref={imgRef} src={src} alt="" onLoad={() => setLoaded(true)}
-      style={{
-        width: "100%", height: "100%", objectFit: "cover",
-        opacity: loaded ? 1 : 0, transition: "opacity 0.6s ease",
-      }} />
-  );
-}
+const gallery = [
+  { src: "/images/bufala.png", className: "aspect-[4/5]" },
+  { src: "/images/prosciutto-crudo.jpg", className: "aspect-[4/5] sm:mt-10" },
+  { src: "/images/pecorino.jpg", className: "aspect-[4/3]" },
+  { src: "/images/carciofi.jpg", className: "aspect-[4/3] sm:mt-10" },
+];
 
 export default function ChiSiamo({ standalone = false }) {
-  const [ref, inView] = useInView();
   return (
-    <section id="chi-siamo" style={{ scrollMarginTop: 80, background: standalone ? COLORS.warmWhite : COLORS.cream, padding: "88px 2rem" }}>
-      <div ref={ref} style={{
-        maxWidth: 1200, margin: "0 auto",
-        display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center",
-      }} className="chi-siamo-grid">
-        <div style={{
-          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(24px)",
-          transition: "all 0.7s ease",
-        }}>
-          <div style={{ fontFamily: "var(--font-dmsans), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", color: COLORS.tomato, textTransform: "uppercase", marginBottom: 16 }}>
-            Chi Siamo
+    <section
+      id="chi-siamo"
+      className={cn("py-20 sm:py-24", standalone ? "bg-paper" : "bg-paper-2/70")}
+    >
+      <div className="shell grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+        {/* Mosaico fotografico */}
+        <Reveal className="order-2 lg:order-1">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            {gallery.map((img) => (
+              <div
+                key={img.src}
+                className={cn(
+                  "overflow-hidden rounded-2xl border border-line bg-surface shadow-soft",
+                  img.className
+                )}
+              >
+                <img
+                  src={img.src}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            ))}
           </div>
-          <h2 style={{
-            fontFamily: "var(--font-playfair), Georgia, serif", fontSize: "clamp(28px,4vw,40px)",
-            fontWeight: 700, color: COLORS.charcoal, margin: "0 0 20px", lineHeight: 1.2,
-          }}>Qualità che si sente,<br />ad ogni consegna.</h2>
-          <p style={{ fontFamily: "var(--font-dmsans), sans-serif", fontSize: 15, lineHeight: 1.8, color: COLORS.gray, marginBottom: 16 }}>
-            Ingrosso Alimentari MAIORI nasce dalla passione per l'eccellenza alimentare e dalla conoscenza diretta del mondo della ristorazione. Selezioniamo ogni referenza con cura, dai latticini freschi ai salumi stagionati, fino alle conserve di qualità.
-          </p>
-          <p style={{ fontFamily: "var(--font-dmsans), sans-serif", fontSize: 15, lineHeight: 1.8, color: COLORS.gray, marginBottom: 36 }}>
-            Un fornitore che conosce le tue esigenze. Un referente dedicato per ogni cliente, nessun call center.
-          </p>
-          {[["🌿", "Filiere selezionate"], ["📦", "Ampio assortimento per la ristorazione"], ["🤝", "Referente dedicato"]].map(([ic, la], i) => (
-            <div key={la} style={{
-              display: "flex", alignItems: "center", gap: 14, marginBottom: 16,
-              paddingBottom: 16, borderBottom: i < 2 ? `1px solid ${COLORS.lightGray}` : "none",
-              opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-12px)",
-              transition: `all 0.5s ease ${0.15 + i * 0.12}s`,
-            }}>
-              <span style={{ fontSize: 20 }}>{ic}</span>
-              <span style={{ fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13, color: COLORS.charcoal, fontWeight: 600 }}>{la}</span>
-            </div>
-          ))}
-        </div>
-        <div style={{
-          display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10,
-          opacity: inView ? 1 : 0, transition: "all 0.7s ease 0.15s",
-        }}>
-          {["/images/bufala.png", "/images/salame.png", "/images/bresaola.png", "/images/scamorza.png"].map((img, i) => (
-            <div key={i} style={{ borderRadius: 8, overflow: "hidden", height: 170 }}>
-              <FadeImg src={img} />
-            </div>
-          ))}
+        </Reveal>
+
+        <div className="order-1 lg:order-2">
+          <Reveal>
+            <p className="eyebrow eyebrow-rule text-accent">Chi siamo</p>
+            <h2 className="mt-4 font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-[1.12] tracking-[-0.01em] text-ink">
+              Qualità che si sente,
+              <span className="block italic text-brand-500">ad ogni consegna.</span>
+            </h2>
+            <p className="mt-6 font-sans text-base leading-relaxed text-ink-soft">
+              Ingrosso Alimentari MAIORI nasce dalla passione per l&apos;eccellenza
+              alimentare e dalla conoscenza diretta del mondo della ristorazione.
+              Selezioniamo ogni referenza con cura: dai latticini freschi ai
+              salumi stagionati, fino alle conserve di qualità.
+            </p>
+            <p className="mt-4 font-sans text-base leading-relaxed text-ink-soft">
+              Un fornitore che conosce le tue esigenze e che sa cosa significa
+              avere il banco pronto prima del servizio.
+            </p>
+          </Reveal>
+
+          <ul className="mt-10 space-y-px overflow-hidden rounded-card border border-line bg-line">
+            {values.map(({ Icon, title, text }, i) => (
+              <Reveal
+                key={title}
+                as="li"
+                delay={120 + i * 100}
+                className="flex gap-4 bg-surface p-5"
+              >
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-100 text-brand-700">
+                  <Icon aria-hidden="true" className="h-[18px] w-[18px]" />
+                </span>
+                <div>
+                  <h3 className="font-sans text-sm font-bold text-ink">{title}</h3>
+                  <p className="mt-1 font-sans text-sm leading-relaxed text-ink-soft">
+                    {text}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
         </div>
       </div>
-      <style>{`@media(max-width:800px){.chi-siamo-grid{grid-template-columns:1fr!important}}`}</style>
     </section>
   );
 }
