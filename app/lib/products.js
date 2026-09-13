@@ -43,36 +43,36 @@ const products = {
       {
         title: "Formaggi Freschi",
         items: [
-          { name: "Ricotta da Lavorazione", desc: "Sottovuoto · Circa 4/5 Kg — Ideale per ripieni", tags: ["Sottovuoto", "Ideale per ripieni"], img: "/images/formaggio-fresco.svg" },
-          { name: "Stracchino Panetto", desc: "1 Kg", tags: ["1 Kg"], img: "/images/formaggio-fresco.svg" },
-          { name: "Stracchino in Vasca", desc: "Vaschetta · Circa 2 Kg — Da lavorazione", tags: ["Vaschetta", "Da lavorazione"], img: "/images/formaggio-fresco.svg" },
-          { name: "Gorgonzola DOP 1/8", desc: "Sostenuta · Circa 1,5 Kg", tags: ["Sostenuta"], img: "/images/formaggio-fresco.svg" }]
+          { name: "Ricotta da Lavorazione", desc: "Sottovuoto · Circa 4/5 Kg — Ideale per ripieni", tags: ["Sottovuoto", "Ideale per ripieni"], img: "/images/formaggio-fresco.jpg" },
+          { name: "Stracchino Panetto", desc: "1 Kg", tags: ["1 Kg"], img: "/images/formaggio-fresco.jpg" },
+          { name: "Stracchino in Vasca", desc: "Vaschetta · Circa 2 Kg — Da lavorazione", tags: ["Vaschetta", "Da lavorazione"], img: "/images/formaggio-fresco.jpg" },
+          { name: "Gorgonzola DOP 1/8", desc: "Sostenuta · Circa 1,5 Kg", tags: ["Sostenuta"], img: "/images/formaggio-fresco.jpg" }]
       },
       {
         title: "Formaggi Stagionati",
         items: [
-          { name: "Gorgonzola Igorcreme 1/8", desc: "Più morbida · Circa 1,5 Kg", tags: ["Più morbida"], img: "/images/formaggio-stagionato.svg" },
-          { name: "Edamer Intero", desc: "Circa 3 Kg", tags: ["Circa 3 Kg"], img: "/images/formaggio-stagionato.svg" },
-          { name: "Edamer a Fette", desc: "Vaschetta 1 Kg — Pronto all'uso", tags: ["Vaschetta 1 Kg", "Pronto all'uso"], img: "/images/formaggio-stagionato.svg" },
-          { name: "Brie", desc: "Forma · Circa 1 Kg", tags: ["Forma"], img: "/images/formaggio-stagionato.svg" },
-          { name: "Taleggio DOP", desc: "Forma intera · Circa 2 Kg", tags: ["Forma intera"], img: "/images/formaggio-stagionato.svg" },
-          { name: "Mascarpone", desc: "Vaschetta 500 gr", tags: ["Vaschetta 500 gr"], img: "/images/panna-burro.svg" },
-          { name: "Grana Padano DOP 1/16", desc: "Spicchio · Circa 1 Kg", tags: ["Spicchio"], img: "/images/formaggio-stagionato.svg" },
-          { name: "Grana Padano DOP a Scaglie", desc: "Vaschetta 500 gr — Pronto all'uso", tags: ["Vaschetta 500 gr", "Pronto all'uso"], img: "/images/formaggio-stagionato.svg" },
-          { name: "Grana Padano DOP Grattugiato", desc: "Busta 1 Kg — 100% Grana Padano", tags: ["Busta 1 Kg", "100% Grana Padano"], img: "/images/formaggio-stagionato.svg" },
-          { name: "Parmigiano Reggiano DOP 24 Mesi", desc: "Spicchio 1/8 · Circa 5 Kg — Alta stagionatura per cucina e taglieri", tags: ["Spicchio 1/8", "Alta stagionatura per "], img: "/images/formaggio-stagionato.svg" },
-          { name: "Fontal ¼", desc: "Spicchio · Circa 3 Kg", tags: ["Spicchio"], img: "/images/formaggio-stagionato.svg" }]
+          { name: "Gorgonzola Igorcreme 1/8", desc: "Più morbida · Circa 1,5 Kg", tags: ["Più morbida"], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Edamer Intero", desc: "Circa 3 Kg", tags: ["Circa 3 Kg"], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Edamer a Fette", desc: "Vaschetta 1 Kg — Pronto all'uso", tags: ["Vaschetta 1 Kg", "Pronto all'uso"], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Brie", desc: "Forma · Circa 1 Kg", tags: ["Forma"], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Taleggio DOP", desc: "Forma intera · Circa 2 Kg", tags: ["Forma intera"], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Mascarpone", desc: "Vaschetta 500 gr", tags: ["Vaschetta 500 gr"], img: "/images/panna-burro.jpg" },
+          { name: "Grana Padano DOP 1/16", desc: "Spicchio · Circa 1 Kg", tags: ["Spicchio"], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Grana Padano DOP a Scaglie", desc: "Vaschetta 500 gr — Pronto all'uso", tags: ["Vaschetta 500 gr", "Pronto all'uso"], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Grana Padano DOP Grattugiato", desc: "Busta 1 Kg — 100% Grana Padano", tags: ["Busta 1 Kg", "100% Grana Padano"], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Parmigiano Reggiano DOP 24 Mesi", desc: "Spicchio 1/8 · Circa 5 Kg — Alta stagionatura per cucina e taglieri", tags: ["Spicchio 1/8", "Alta stagionatura per "], img: "/images/formaggio-stagionato.jpg" },
+          { name: "Fontal ¼", desc: "Spicchio · Circa 3 Kg", tags: ["Spicchio"], img: "/images/formaggio-stagionato.jpg" }]
       },
       {
         title: "Panna, Burro & Pecorini",
         items: [
-          { name: "Panna da Cucina", desc: "Brik 200 ml", tags: ["Brik 200 ml"], img: "/images/panna-burro.svg" },
-          { name: "Panna da Cucina", desc: "Brik 500 ml", tags: ["Brik 500 ml"], img: "/images/panna-burro.svg" },
-          { name: "Burro", desc: "Panetto 1 Kg", tags: ["Panetto 1 Kg"], img: "/images/panna-burro.svg" },
-          { name: "Formaggio Spalmabile", desc: "Secchiello/Vasca 1,5 Kg — Tipo \"Philadelphia\"", tags: ["Secchiello/Vasca 1,5 Kg", "Tipo \"Philadelphia\""], img: "/images/panna-burro.svg" },
-          { name: "Panna da Montare UHT", desc: "Brik 1 Litro", tags: ["Brik 1 Litro"], img: "/images/panna-burro.svg" },
-          { name: "Pecorino Sardo Dolce DOP", desc: "Giovane · Circa 1,8 Kg", tags: ["Giovane"], img: "/images/pecorino.svg" },
-          { name: "Pecorino Sardo Stagionato DOP", desc: "Semistagionato · Circa 3 Kg", tags: ["Semistagionato"], img: "/images/pecorino.svg" }]
+          { name: "Panna da Cucina", desc: "Brik 200 ml", tags: ["Brik 200 ml"], img: "/images/panna-burro.jpg" },
+          { name: "Panna da Cucina", desc: "Brik 500 ml", tags: ["Brik 500 ml"], img: "/images/panna-burro.jpg" },
+          { name: "Burro", desc: "Panetto 1 Kg", tags: ["Panetto 1 Kg"], img: "/images/panna-burro.jpg" },
+          { name: "Formaggio Spalmabile", desc: "Secchiello/Vasca 1,5 Kg — Tipo \"Philadelphia\"", tags: ["Secchiello/Vasca 1,5 Kg", "Tipo \"Philadelphia\""], img: "/images/panna-burro.jpg" },
+          { name: "Panna da Montare UHT", desc: "Brik 1 Litro", tags: ["Brik 1 Litro"], img: "/images/panna-burro.jpg" },
+          { name: "Pecorino Sardo Dolce DOP", desc: "Giovane · Circa 1,8 Kg", tags: ["Giovane"], img: "/images/pecorino.jpg" },
+          { name: "Pecorino Sardo Stagionato DOP", desc: "Semistagionato · Circa 3 Kg", tags: ["Semistagionato"], img: "/images/pecorino.jpg" }]
       }]
   },
   salumi: {
@@ -83,46 +83,46 @@ const products = {
       {
         title: "Prosciutti Cotti",
         items: [
-          { name: "Prosciutto Cotto Senza Cotenna", desc: "Solo Intero · Peso Variabile", tags: ["Solo Intero"], img: "/images/prosciutto-cotto.svg" },
-          { name: "Prosciutto Cotto Senza Cotenna ½", desc: "Solo a metà · Peso Variabile", tags: ["Solo a metà"], img: "/images/prosciutto-cotto.svg" },
-          { name: "Prosciutto Cotto Alta Resa", desc: "Intero · Peso Variabile — disponibile anche a metà", tags: ["Intero", "Disponibile anche a metà"], img: "/images/prosciutto-cotto.svg" },
-          { name: "Prosciutto Cotto Standard", desc: "Intero · Peso Variabile", tags: ["Intero"], img: "/images/prosciutto-cotto.svg" },
-          { name: "Prosciutto Cotto Standard ½", desc: "Solo a metà · Peso Variabile", tags: ["Solo a metà"], img: "/images/prosciutto-cotto.svg" },
-          { name: "Prosciutto Cotto Scelto", desc: "Peso Variabile — Alta qualità", tags: ["Peso Variabile", "Alta qualità"], img: "/images/prosciutto-cotto.svg" },
-          { name: "Prosciutto Cotto Lenta Cottura", desc: "Peso Variabile", tags: ["Peso Variabile"], img: "/images/prosciutto-cotto.svg" },
-          { name: "Prosciutto Cotto Alta Qualità Naz.", desc: "Peso Variabile — Novità inserita", tags: ["Peso Variabile", "Novità inserita"], img: "/images/prosciutto-cotto.svg" }]
+          { name: "Prosciutto Cotto Senza Cotenna", desc: "Solo Intero · Peso Variabile", tags: ["Solo Intero"], img: "/images/prosciutto-cotto.jpg" },
+          { name: "Prosciutto Cotto Senza Cotenna ½", desc: "Solo a metà · Peso Variabile", tags: ["Solo a metà"], img: "/images/prosciutto-cotto.jpg" },
+          { name: "Prosciutto Cotto Alta Resa", desc: "Intero · Peso Variabile — disponibile anche a metà", tags: ["Intero", "Disponibile anche a metà"], img: "/images/prosciutto-cotto.jpg" },
+          { name: "Prosciutto Cotto Standard", desc: "Intero · Peso Variabile", tags: ["Intero"], img: "/images/prosciutto-cotto.jpg" },
+          { name: "Prosciutto Cotto Standard ½", desc: "Solo a metà · Peso Variabile", tags: ["Solo a metà"], img: "/images/prosciutto-cotto.jpg" },
+          { name: "Prosciutto Cotto Scelto", desc: "Peso Variabile — Alta qualità", tags: ["Peso Variabile", "Alta qualità"], img: "/images/prosciutto-cotto.jpg" },
+          { name: "Prosciutto Cotto Lenta Cottura", desc: "Peso Variabile", tags: ["Peso Variabile"], img: "/images/prosciutto-cotto.jpg" },
+          { name: "Prosciutto Cotto Alta Qualità Naz.", desc: "Peso Variabile — Novità inserita", tags: ["Peso Variabile", "Novità inserita"], img: "/images/prosciutto-cotto.jpg" }]
       },
       {
         title: "Prosciutti Crudi & Bresaola",
         items: [
-          { name: "Prosciutto Crudo Standard", desc: "Peso Variabile — 100% Italiano", tags: ["Peso Variabile", "100% Italiano"], img: "/images/prosciutto-crudo.svg" },
-          { name: "Prosciutto Crudo Standard Selezione", desc: "Crudo Mattonella · Circa 2 Kg — Zero scarto", tags: ["Crudo Mattonella", "Zero scarto"], img: "/images/prosciutto-crudo.svg" },
-          { name: "Prosciutto Crudo di Parma DOP", desc: "Stag. min. 14 mesi · Circa 6/7 Kg — Pressato", tags: ["Stag. min. 14 mesi", "Pressato"], img: "/images/prosciutto-crudo.svg" },
-          { name: "Prosciutto Crudo di Parma DOP Disossato", desc: "Marchio di tutela · Circa 6/7 Kg — Addobbo", tags: ["Marchio di tutela", "Addobbo"], img: "/images/prosciutto-crudo.svg" },
-          { name: "Prosciutto Crudo di Parma DOP Selezione", desc: "Disossato Alta Qualità · Circa 7/8 Kg", tags: ["Disossato Alta Qualità"], img: "/images/prosciutto-crudo.svg" },
-          { name: "Prosciutto Crudo Stagionatura 18 Mesi", desc: "Circa 7/8 Kg", tags: ["Circa 7/8 Kg"], img: "/images/prosciutto-crudo.svg" },
-          { name: "Prosciutto Crudo Stagionatura 24 Mesi", desc: "Circa 7/8 Kg — Disossato · Riserva", tags: ["Circa 7/8 Kg", "Disossato · Riserva"], img: "/images/prosciutto-crudo.svg" },
+          { name: "Prosciutto Crudo Standard", desc: "Peso Variabile — 100% Italiano", tags: ["Peso Variabile", "100% Italiano"], img: "/images/prosciutto-crudo.jpg" },
+          { name: "Prosciutto Crudo Standard Selezione", desc: "Crudo Mattonella · Circa 2 Kg — Zero scarto", tags: ["Crudo Mattonella", "Zero scarto"], img: "/images/prosciutto-crudo.jpg" },
+          { name: "Prosciutto Crudo di Parma DOP", desc: "Stag. min. 14 mesi · Circa 6/7 Kg — Pressato", tags: ["Stag. min. 14 mesi", "Pressato"], img: "/images/prosciutto-crudo.jpg" },
+          { name: "Prosciutto Crudo di Parma DOP Disossato", desc: "Marchio di tutela · Circa 6/7 Kg — Addobbo", tags: ["Marchio di tutela", "Addobbo"], img: "/images/prosciutto-crudo.jpg" },
+          { name: "Prosciutto Crudo di Parma DOP Selezione", desc: "Disossato Alta Qualità · Circa 7/8 Kg", tags: ["Disossato Alta Qualità"], img: "/images/prosciutto-crudo.jpg" },
+          { name: "Prosciutto Crudo Stagionatura 18 Mesi", desc: "Circa 7/8 Kg", tags: ["Circa 7/8 Kg"], img: "/images/prosciutto-crudo.jpg" },
+          { name: "Prosciutto Crudo Stagionatura 24 Mesi", desc: "Circa 7/8 Kg — Disossato · Riserva", tags: ["Circa 7/8 Kg", "Disossato · Riserva"], img: "/images/prosciutto-crudo.jpg" },
           { name: "Bresaola Punta d'Anca", desc: "A metà sottovuoto · Circa 1,5 Kg — Alta qualità, ideale per carpacci", tags: ["A metà sottovuoto", "Alta qualità, ideale p"], img: "/images/bresaola.png" }]
       },
       {
         title: "Arrosti, Speck & Mortadella",
         items: [
-          { name: "Arrosto di Tacchino", desc: "A metà sottovuoto · Peso Variabile — Leggero e delicato", tags: ["A metà sottovuoto", "Leggero e delicato"], img: "/images/pollame-arrosto.svg" },
-          { name: "Arrosto di Tacchino Lenta Cottura", desc: "Intero · Circa 3 Kg — Novità — maggiore morbidezza e resa", tags: ["Intero", "Novità — maggiore morb"], img: "/images/pollame-arrosto.svg" },
+          { name: "Arrosto di Tacchino", desc: "A metà sottovuoto · Peso Variabile — Leggero e delicato", tags: ["A metà sottovuoto", "Leggero e delicato"], img: "/images/pollame-arrosto.jpg" },
+          { name: "Arrosto di Tacchino Lenta Cottura", desc: "Intero · Circa 3 Kg — Novità — maggiore morbidezza e resa", tags: ["Intero", "Novità — maggiore morb"], img: "/images/pollame-arrosto.jpg" },
           { name: "Speck ½", desc: "A metà sottovuoto · Circa 2 Kg", tags: ["A metà sottovuoto"], img: "/images/carne-pronta.svg" },
-          { name: "Mortadella con Pistacchi", desc: "A metà sottovuoto · Circa 1,5 Kg — Ricavata da forma da 3 Kg c.a.", tags: ["A metà sottovuoto", "Ricavata da forma da 3"], img: "/images/mortadella.svg" }]
+          { name: "Mortadella con Pistacchi", desc: "A metà sottovuoto · Circa 1,5 Kg — Ricavata da forma da 3 Kg c.a.", tags: ["A metà sottovuoto", "Ricavata da forma da 3"], img: "/images/mortadella.jpg" }]
       },
       {
         title: "Pancette & Salami",
         items: [
-          { name: "Pancetta Arrotolata Artigianale", desc: "A metà sottovuoto · Peso Variabile — Rilegata a mano", tags: ["A metà sottovuoto", "Rilegata a mano"], img: "/images/pancetta.svg" },
-          { name: "Pancetta Stesa Affumicata", desc: "A metà sottovuoto · Circa 1,2 Kg", tags: ["A metà sottovuoto"], img: "/images/pancetta.svg" },
+          { name: "Pancetta Arrotolata Artigianale", desc: "A metà sottovuoto · Peso Variabile — Rilegata a mano", tags: ["A metà sottovuoto", "Rilegata a mano"], img: "/images/pancetta.jpg" },
+          { name: "Pancetta Stesa Affumicata", desc: "A metà sottovuoto · Circa 1,2 Kg", tags: ["A metà sottovuoto"], img: "/images/pancetta.jpg" },
           { name: "Salame Milano", desc: "A metà sottovuoto · Circa 1,4 Kg", tags: ["A metà sottovuoto"], img: "/images/salame.png" },
           { name: "Salame Crespone Casereccio", desc: "A metà sottovuoto · Circa 1,4 Kg", tags: ["A metà sottovuoto"], img: "/images/salame.png" },
           { name: "Salame Napoli", desc: "A metà sottovuoto · Circa 1 Kg", tags: ["A metà sottovuoto"], img: "/images/salame.png" },
           { name: "'Nduja", desc: "Sottovuoto · Circa 0,4 Kg — Tipica calabrese", tags: ["Sottovuoto", "Tipica calabrese"], img: "/images/salame.png" },
-          { name: "Wurstel Puro Suino", desc: "Confezione 250 gr — Venduto al chilo", tags: ["Confezione 250 gr", "Venduto al chilo"], img: "/images/wurstel.svg" },
-          { name: "Wurstel Pollo e Tacchino", desc: "Confezione 250 gr — Venduto al chilo", tags: ["Confezione 250 gr", "Venduto al chilo"], img: "/images/wurstel.svg" },
+          { name: "Wurstel Puro Suino", desc: "Confezione 250 gr — Venduto al chilo", tags: ["Confezione 250 gr", "Venduto al chilo"], img: "/images/wurstel.jpg" },
+          { name: "Wurstel Pollo e Tacchino", desc: "Confezione 250 gr — Venduto al chilo", tags: ["Confezione 250 gr", "Venduto al chilo"], img: "/images/wurstel.jpg" },
           { name: "Spianata Calabra Piccante", desc: "Sottovuoto · Circa 2 Kg — Linea competitiva", tags: ["Sottovuoto", "Linea competitiva"], img: "/images/salame.png" },
           { name: "Spianata Piccante", desc: "Sottovuoto · Circa 2 Kg — Alta qualità, stagionatura garantita", tags: ["Sottovuoto", "Alta qualità, stagiona"], img: "/images/salame.png" }]
       },
@@ -132,13 +132,13 @@ const products = {
           { name: "Salame tipo Napoli Piccante", desc: "Sottovuoto · Circa 2 Kg", tags: ["Sottovuoto"], img: "/images/salame.png" },
           { name: "Salame tipo Napoli Piccante (fetta rotonda)", desc: "Sottovuoto · Circa 1 Kg — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Prodotto a disponibili"], img: "/images/salame.png" },
           { name: "Capocollo Piccante", desc: "Sottovuoto · Circa 1,7 Kg", tags: ["Sottovuoto"], img: "/images/salame.png" },
-          { name: "Guanciale Nazionale", desc: "Sottovuoto · Circa 1,3 Kg", tags: ["Sottovuoto"], img: "/images/pancetta.svg" },
+          { name: "Guanciale Nazionale", desc: "Sottovuoto · Circa 1,3 Kg", tags: ["Sottovuoto"], img: "/images/pancetta.jpg" },
           { name: "Porchetta Trancio", desc: "Sottovuoto · Circa 2/3 Kg — Pronta all'uso", tags: ["Sottovuoto", "Pronta all'uso"], img: "/images/carne-pronta.svg" },
           { name: "Manzo Stufato", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/carne-pronta.svg" },
           { name: "Roast-Beef", desc: "Sottovuoto · Circa 3 Kg", tags: ["Sottovuoto"], img: "/images/carne-pronta.svg" },
           { name: "Carne Salada", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/carne-pronta.svg" },
           { name: "Carpaccio di Bresaola", desc: "Sottovuoto · Peso Variabile — Per taglieri e carpacci gourmet", tags: ["Sottovuoto", "Per taglieri e carpacc"], img: "/images/bresaola.png" },
-          { name: "Guanciale Stagionato", desc: "A metà sottovuoto · Circa 1 Kg — Ideale per carbonara e amatriciana", tags: ["A metà sottovuoto", "Ideale per carbonara e"], img: "/images/pancetta.svg" }]
+          { name: "Guanciale Stagionato", desc: "A metà sottovuoto · Circa 1 Kg — Ideale per carbonara e amatriciana", tags: ["A metà sottovuoto", "Ideale per carbonara e"], img: "/images/pancetta.jpg" }]
       }]
   },
   conserve: {
