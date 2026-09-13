@@ -109,7 +109,7 @@ const products = {
         items: [
           { name: "Arrosto di Tacchino", desc: "A metà sottovuoto · Peso Variabile — Leggero e delicato", tags: ["A metà sottovuoto", "Leggero e delicato"], img: "/images/pollame-arrosto.jpg" },
           { name: "Arrosto di Tacchino Lenta Cottura", desc: "Intero · Circa 3 Kg — Novità — maggiore morbidezza e resa", tags: ["Intero", "Novità — maggiore morb"], img: "/images/pollame-arrosto.jpg" },
-          { name: "Speck ½", desc: "A metà sottovuoto · Circa 2 Kg", tags: ["A metà sottovuoto"], img: "/images/carne-pronta.svg" },
+          { name: "Speck ½", desc: "A metà sottovuoto · Circa 2 Kg", tags: ["A metà sottovuoto"], img: "/images/carne-pronta.jpg" },
           { name: "Mortadella con Pistacchi", desc: "A metà sottovuoto · Circa 1,5 Kg — Ricavata da forma da 3 Kg c.a.", tags: ["A metà sottovuoto", "Ricavata da forma da 3"], img: "/images/mortadella.jpg" }]
       },
       {
@@ -133,10 +133,10 @@ const products = {
           { name: "Salame tipo Napoli Piccante (fetta rotonda)", desc: "Sottovuoto · Circa 1 Kg — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Prodotto a disponibili"], img: "/images/salame.png" },
           { name: "Capocollo Piccante", desc: "Sottovuoto · Circa 1,7 Kg", tags: ["Sottovuoto"], img: "/images/salame.png" },
           { name: "Guanciale Nazionale", desc: "Sottovuoto · Circa 1,3 Kg", tags: ["Sottovuoto"], img: "/images/pancetta.jpg" },
-          { name: "Porchetta Trancio", desc: "Sottovuoto · Circa 2/3 Kg — Pronta all'uso", tags: ["Sottovuoto", "Pronta all'uso"], img: "/images/carne-pronta.svg" },
-          { name: "Manzo Stufato", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/carne-pronta.svg" },
-          { name: "Roast-Beef", desc: "Sottovuoto · Circa 3 Kg", tags: ["Sottovuoto"], img: "/images/carne-pronta.svg" },
-          { name: "Carne Salada", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/carne-pronta.svg" },
+          { name: "Porchetta Trancio", desc: "Sottovuoto · Circa 2/3 Kg — Pronta all'uso", tags: ["Sottovuoto", "Pronta all'uso"], img: "/images/carne-pronta.jpg" },
+          { name: "Manzo Stufato", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/carne-pronta.jpg" },
+          { name: "Roast-Beef", desc: "Sottovuoto · Circa 3 Kg", tags: ["Sottovuoto"], img: "/images/carne-pronta.jpg" },
+          { name: "Carne Salada", desc: "Sottovuoto · Peso Variabile — Prodotto a disponibilità periodica", tags: ["Sottovuoto", "Su richiesta", "Prodotto a disponibili"], img: "/images/carne-pronta.jpg" },
           { name: "Carpaccio di Bresaola", desc: "Sottovuoto · Peso Variabile — Per taglieri e carpacci gourmet", tags: ["Sottovuoto", "Per taglieri e carpacc"], img: "/images/bresaola.png" },
           { name: "Guanciale Stagionato", desc: "A metà sottovuoto · Circa 1 Kg — Ideale per carbonara e amatriciana", tags: ["A metà sottovuoto", "Ideale per carbonara e"], img: "/images/pancetta.jpg" }]
       }]
@@ -149,56 +149,56 @@ const products = {
       {
         title: "Olive & Capperi",
         items: [
-          { name: "Olive Nostraline Denocciolate", desc: "Secchio 5 Kg", tags: ["Secchio 5 Kg"], img: "/images/olive.svg" },
-          { name: "Olive Nostraline", desc: "In salamoia con nocciolo · Secchio 5 Kg", tags: ["In salamoia con nocciolo"], img: "/images/olive.svg" },
-          { name: "Olive Nostraline", desc: "In olio · Vaso 950 gr", tags: ["In olio"], img: "/images/olive.svg" },
-          { name: "Olive Taggiasche", desc: "In olio · Vaso 1,5 Kg", tags: ["In olio"], img: "/images/olive.svg" },
-          { name: "Capperi sotto Sale", desc: "Secchiello 1 Kg", tags: ["Secchiello 1 Kg"], img: "/images/olive.svg" }]
+          { name: "Olive Nostraline Denocciolate", desc: "Secchio 5 Kg", tags: ["Secchio 5 Kg"], img: "/images/olive.jpg" },
+          { name: "Olive Nostraline", desc: "In salamoia con nocciolo · Secchio 5 Kg", tags: ["In salamoia con nocciolo"], img: "/images/olive.jpg" },
+          { name: "Olive Nostraline", desc: "In olio · Vaso 950 gr", tags: ["In olio"], img: "/images/olive.jpg" },
+          { name: "Olive Taggiasche", desc: "In olio · Vaso 1,5 Kg", tags: ["In olio"], img: "/images/olive.jpg" },
+          { name: "Capperi sotto Sale", desc: "Secchiello 1 Kg", tags: ["Secchiello 1 Kg"], img: "/images/olive.jpg" }]
       },
       {
         title: "Funghi",
         items: [
-          { name: "Funghi Champignon al Naturale", desc: "Latta · Peso Variabile", tags: ["Latta"], img: "/images/funghi.svg" },
-          { name: "Funghi Champignon Trifolati", desc: "Busta prima scelta · Peso Variabile", tags: ["Busta prima scelta"], img: "/images/funghi.svg" },
-          { name: "Funghi Porcini", desc: "Latta · Peso Variabile — Ideale per pizza", tags: ["Latta", "Ideale per pizza"], img: "/images/funghi.svg" },
-          { name: "Funghi Porcini Selezione", desc: "Latta · Peso Variabile", tags: ["Latta"], img: "/images/funghi.svg" }]
+          { name: "Funghi Champignon al Naturale", desc: "Latta · Peso Variabile", tags: ["Latta"], img: "/images/funghi.jpg" },
+          { name: "Funghi Champignon Trifolati", desc: "Busta prima scelta · Peso Variabile", tags: ["Busta prima scelta"], img: "/images/funghi.jpg" },
+          { name: "Funghi Porcini", desc: "Latta · Peso Variabile — Ideale per pizza", tags: ["Latta", "Ideale per pizza"], img: "/images/funghi.jpg" },
+          { name: "Funghi Porcini Selezione", desc: "Latta · Peso Variabile", tags: ["Latta"], img: "/images/funghi.jpg" }]
       },
       {
         title: "Carciofi & Verdure",
         items: [
-          { name: "Carciofi a Fettine al Naturale", desc: "Peso Variabile", tags: ["Peso Variabile"], img: "/images/carciofi.svg" },
-          { name: "Carciofi a Spicchi in Olio", desc: "Busta · Peso Variabile", tags: ["Busta"], img: "/images/carciofi.svg" },
-          { name: "Carciofi a Fettine Trifolati", desc: "Busta · Peso Variabile", tags: ["Busta"], img: "/images/carciofi.svg" }]
+          { name: "Carciofi a Fettine al Naturale", desc: "Peso Variabile", tags: ["Peso Variabile"], img: "/images/carciofi.jpg" },
+          { name: "Carciofi a Spicchi in Olio", desc: "Busta · Peso Variabile", tags: ["Busta"], img: "/images/carciofi.jpg" },
+          { name: "Carciofi a Fettine Trifolati", desc: "Busta · Peso Variabile", tags: ["Busta"], img: "/images/carciofi.jpg" }]
       },
       {
         title: "Pomodoro & Basi per Pizza",
         items: [
-          { name: "Polpa di Pomodoro", desc: "6 latte da 2500gr · Cartone 15 Kg", tags: ["6 latte da 2500gr"], img: "/images/pomodori.svg" },
-          { name: "Polpa di Pomodoro Bag", desc: "2 buste da 5 Kg · Cartone 10 Kg", tags: ["2 buste da 5 Kg"], img: "/images/pomodori.svg" },
-          { name: "Pomodori Pelati Prima Scelta", desc: "6 latte da 2500gr · Cartone 15 Kg", tags: ["6 latte da 2500gr"], img: "/images/pomodori.svg" },
-          { name: "Pomodori Pelati", desc: "6 latte da 2500gr · Cartone 15 Kg", tags: ["6 latte da 2500gr"], img: "/images/pomodori.svg" }]
+          { name: "Polpa di Pomodoro", desc: "6 latte da 2500gr · Cartone 15 Kg", tags: ["6 latte da 2500gr"], img: "/images/pomodori.jpg" },
+          { name: "Polpa di Pomodoro Bag", desc: "2 buste da 5 Kg · Cartone 10 Kg", tags: ["2 buste da 5 Kg"], img: "/images/pomodori.jpg" },
+          { name: "Pomodori Pelati Prima Scelta", desc: "6 latte da 2500gr · Cartone 15 Kg", tags: ["6 latte da 2500gr"], img: "/images/pomodori.jpg" },
+          { name: "Pomodori Pelati", desc: "6 latte da 2500gr · Cartone 15 Kg", tags: ["6 latte da 2500gr"], img: "/images/pomodori.jpg" }]
       },
       {
         title: "Tonno & Acciughe",
         items: [
-          { name: "Tonno in Latta", desc: "Olio di Oliva o Girasole · 80 gr", tags: ["Olio di Oliva o Girasole"], img: "/images/tonno.svg" },
-          { name: "Tonno in Latta", desc: "600 gr", tags: ["600 gr"], img: "/images/tonno.svg" },
-          { name: "Tonno in Latta", desc: "Olio di Oliva o Girasole · 1630 gr", tags: ["Olio di Oliva o Girasole"], img: "/images/tonno.svg" },
-          { name: "Tonno Pinna Gialla", desc: "Olio di Oliva · 1730 gr", tags: ["Olio di Oliva"], img: "/images/tonno.svg" },
-          { name: "Acciughe in Olio", desc: "Vaso vetro 720 gr", tags: ["Vaso vetro 720 gr"], img: "/images/tonno.svg" },
-          { name: "Acciughe in Olio", desc: "Latta 700 gr", tags: ["Latta 700 gr"], img: "/images/tonno.svg" },
-          { name: "Acciughe Élite Italia", desc: "Latta 680 gr — Prodotto di alta qualità", tags: ["Latta 680 gr", "Prodotto di alta quali"], img: "/images/tonno.svg" }]
+          { name: "Tonno in Latta", desc: "Olio di Oliva o Girasole · 80 gr", tags: ["Olio di Oliva o Girasole"], img: "/images/tonno.jpg" },
+          { name: "Tonno in Latta", desc: "600 gr", tags: ["600 gr"], img: "/images/tonno.jpg" },
+          { name: "Tonno in Latta", desc: "Olio di Oliva o Girasole · 1630 gr", tags: ["Olio di Oliva o Girasole"], img: "/images/tonno.jpg" },
+          { name: "Tonno Pinna Gialla", desc: "Olio di Oliva · 1730 gr", tags: ["Olio di Oliva"], img: "/images/tonno.jpg" },
+          { name: "Acciughe in Olio", desc: "Vaso vetro 720 gr", tags: ["Vaso vetro 720 gr"], img: "/images/tonno.jpg" },
+          { name: "Acciughe in Olio", desc: "Latta 700 gr", tags: ["Latta 700 gr"], img: "/images/tonno.jpg" },
+          { name: "Acciughe Élite Italia", desc: "Latta 680 gr — Prodotto di alta qualità", tags: ["Latta 680 gr", "Prodotto di alta quali"], img: "/images/tonno.jpg" }]
       },
       {
         title: "Creme, Salse & Specialità",
         items: [
-          { name: "Salsa Tartufata Scura", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.svg" },
-          { name: "Salsa Tartufata Chiara", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.svg" },
-          { name: "Crema di Porcini", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.svg" },
-          { name: "Friarielli", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/verdure.svg" },
+          { name: "Salsa Tartufata Scura", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.jpg" },
+          { name: "Salsa Tartufata Chiara", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.jpg" },
+          { name: "Crema di Porcini", desc: "Vaso vetro 500 gr", tags: ["Vaso vetro 500 gr"], img: "/images/creme.jpg" },
+          { name: "Friarielli", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/verdure.jpg" },
           { name: "Scarole alla Napoletana", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/scarola.jpg" },
-          { name: "Pomodorini Rossi Semidried", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/pomodori.svg" },
-          { name: "Pomodorini Gialli Semidried", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/pomodori.svg" }]
+          { name: "Pomodorini Rossi Semidried", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/pomodori.jpg" },
+          { name: "Pomodorini Gialli Semidried", desc: "Vaso vetro", tags: ["Vaso vetro"], img: "/images/pomodori.jpg" }]
       }]
   },
 };
