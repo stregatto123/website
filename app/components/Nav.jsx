@@ -188,7 +188,7 @@ export default function Nav() {
                     { Icon: Phone, label: "Telefono", value: SITE.phone },
                     { Icon: Mail, label: "Email", value: SITE.email },
                     { Icon: Clock, label: "Orari", value: SITE.hours },
-                  ].map(({ Icon, label, value }) => (
+                  ].filter(({ value }) => value).map(({ Icon, label, value }) => (
                     <div key={label} className="flex items-start gap-3">
                       <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-brass" />
                       <div>

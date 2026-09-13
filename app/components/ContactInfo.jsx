@@ -29,7 +29,7 @@ export default function ContactInfo() {
       </Reveal>
 
       <dl className="mt-7 space-y-px overflow-hidden rounded-card border border-line bg-line">
-        {contacts.map(({ Icon, label, value }, i) => (
+        {contacts.filter(({ value }) => value).map(({ Icon, label, value }, i) => (
           <Reveal key={label} delay={80 + i * 70} className="flex gap-4 bg-surface p-5">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-100 text-brand-700">
               <Icon aria-hidden="true" className="h-[18px] w-[18px]" />

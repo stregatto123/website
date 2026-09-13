@@ -71,7 +71,7 @@ export default function Footer() {
           <div>
             <h2 className="eyebrow font-sans text-brass-soft">Contatti</h2>
             <dl className="mt-5 space-y-3.5">
-              {contacts.map(({ Icon, label, value }) => (
+              {contacts.filter(({ value }) => value).map(({ Icon, label, value }) => (
                 <div key={label} className="flex items-start gap-3">
                   <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-brass" />
                   <div className="font-sans text-sm">
@@ -90,9 +90,11 @@ export default function Footer() {
           <p>
             © {new Date().getFullYear()} {SITE.name} — Tutti i diritti riservati
           </p>
-          <p>
-            P.IVA: {SITE.vat} — {SITE.address}
-          </p>
+          {(SITE.vat || SITE.address) && (
+            <p>
+              {[SITE.vat && `P.IVA: ${SITE.vat}`, SITE.address].filter(Boolean).join(" — ")}
+            </p>
+          )}
         </div>
       </div>
     </footer>
