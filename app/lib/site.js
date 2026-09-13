@@ -9,7 +9,7 @@ export const SITE = {
   name: "Ingrosso Alimentari MAIORI",
   shortName: "Maiori",
   tagline: "Fornitore B2B per bar, ristoranti, pizzerie e gastronomie",
-  zone: "Area Campana — Napoli e provincia",
+  zone: "Savona e provincia",
   phone: "",
   email: "",
   hours: "",
