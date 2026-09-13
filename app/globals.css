@@ -1,86 +1,179 @@
-:root {
-  color-scheme: light;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    /* Altezza della navbar fissa: usata per compensare il contenuto
+       delle pagine interne (vedi .below-nav). */
+    --nav-h: 64px;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --nav-h: 104px;
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Compensa la navbar fissa quando si salta a un'ancora */
+    scroll-padding-top: 6rem;
+  }
+
+  html,
+  body {
+    min-height: 100vh;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  img {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 100%;
+  }
+
+  /* Focus da tastiera sempre visibile e ad alto contrasto, anche sopra
+     i fondali scuri (doppio anello chiaro/scuro). */
+  :focus-visible {
+    outline: 2px solid #b04a22;
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  .on-dark :focus-visible,
+  .on-dark:focus-visible {
+    outline-color: #e6ce95;
+  }
+
+  ::selection {
+    background: #dceae4;
+    color: #0c2b24;
+  }
 }
 
-* {
-  box-sizing: border-box;
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-shell px-5 sm:px-8;
+  }
+
+  .below-nav {
+    padding-top: var(--nav-h);
+  }
+
+  .eyebrow {
+    @apply font-sans text-2xs font-bold uppercase tracking-eyebrow;
+  }
+
+  /* Barra decorativa che precede gli occhielli di sezione */
+  .eyebrow-rule::before {
+    content: "";
+    @apply mr-3 inline-block h-px w-7 align-middle;
+    background: currentColor;
+  }
+
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-6 text-[0.8125rem] font-bold uppercase tracking-[0.08em] no-underline transition duration-200;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-[#933C1B] active:translate-y-px;
+    box-shadow: 0 10px 24px -14px rgba(176, 74, 34, 0.9);
+  }
+
+  .btn-dark {
+    @apply btn bg-brand-900 text-white hover:bg-brand-700 active:translate-y-px;
+  }
+
+  .btn-ghost-dark {
+    @apply btn border border-white/35 text-white hover:border-white/70 hover:bg-white/10 active:translate-y-px;
+  }
+
+  .btn-ghost {
+    @apply btn border border-ink/20 text-ink hover:border-ink/50 hover:bg-ink/5 active:translate-y-px;
+  }
+
+  .card {
+    @apply rounded-card border border-line bg-surface shadow-soft;
+  }
+
+  .field {
+    @apply min-h-[46px] w-full rounded-xl border border-line bg-paper px-4 py-3 font-sans text-[0.9375rem] text-ink outline-none transition placeholder:text-ink-soft/60 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/25;
+  }
+
+  .field-label {
+    @apply mb-1.5 block font-sans text-xs font-bold tracking-[0.04em] text-ink;
+  }
+
+  /* Trama sottile "carta da macelleria" per i fondali scuri */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+  }
+
+  .hairline {
+    @apply h-px w-full bg-line;
+  }
 }
 
-html, body {
-  min-height: 100vh;
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
+@layer utilities {
+  .text-shadow-dark {
+    text-shadow: 0 1px 20px rgba(12, 43, 36, 0.45);
+  }
+
+  /* Rivelazione all'ingresso basata su CSS: parte al mount, non dipende
+     da IntersectionObserver (vedi nota in app/lib/useInView.js). */
+  .reveal {
+    animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 }
 
-img {
-  display: inline-block;
-  vertical-align: middle;
-  max-width: 100%;
-}
-
-@keyframes fadeInPage {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.page-fade-in {
-  animation: fadeInPage 0.5s ease;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.btn-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.btn-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.16);
-}
-
-.btn-lift:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-}
-
-.nav-link {
-  position: relative;
-}
-
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 100%;
-  bottom: -2px;
-  height: 2px;
-  background: currentColor;
-  transition: right 0.25s ease;
-}
-
-.nav-link:hover::after {
-  right: 0;
-}
-
-/* Visible keyboard focus indicator, used on custom interactive elements
-   (plain divs acting as buttons) that don't get a native focus ring. */
-:focus-visible {
-  outline: 2px solid #3A4425;
-  outline-offset: 2px;
-}
-
-.focusable-card:focus-visible {
-  outline: 2px solid #3A4425;
-  outline-offset: 3px;
-}
-
-/* Respect the OS "reduce motion" accessibility preference: remove
-   scroll/entrance/hover animations and transitions site-wide. */
+/* Rispetta la preferenza di sistema "riduci animazioni": niente
+   entrate, parallax o transizioni su tutto il sito. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

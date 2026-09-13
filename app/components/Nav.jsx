@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { COLORS } from "../lib/colors";
-
-const links = [
-  { href: "/chi-siamo", label: "Chi Siamo" },
-  { href: "/catalogo", label: "Catalogo" },
-  { href: "/contatti", label: "Contatti" },
-];
+import * as Dialog from "@radix-ui/react-dialog";
+import { motion } from "framer-motion";
+import { ArrowRight, Clock, Mail, MapPin, Menu, Phone, X } from "lucide-react";
+import { NAV_LINKS, SITE } from "../lib/site";
+import { cn } from "../lib/cn";
+import Logo from "./Logo";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -17,116 +16,189 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const dark = scrolled || pathname !== "/";
+  // Sopra l'hero scuro della home la barra resta trasparente con testo chiaro.
+  const overHero = pathname === "/" && !scrolled;
 
   return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: dark ? "rgba(250,246,238,0.97)" : "transparent",
-      backdropFilter: dark ? "blur(12px)" : "none",
-      boxShadow: dark ? "0 1px 24px rgba(0,0,0,0.07)" : "none",
-      transition: "all 0.4s", padding: "0 2rem",
-    }}>
-      <div style={{
-        maxWidth: 1200, margin: "0 auto",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        height: scrolled ? 64 : 80, transition: "height 0.4s",
-      }}>
-        <Link href="/" onClick={() => setOpen(false)} style={{
-          display: "flex", alignItems: "center", gap: 10,
-          background: "none", border: "none", cursor: "pointer", padding: 0,
-          textDecoration: "none",
-        }}>
-          <div style={{
-            width: 36, height: 36, borderRadius: "50%",
-            background: `linear-gradient(135deg,${COLORS.olive},${COLORS.oliveLight})`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <span style={{ color: "#fff", fontWeight: 800, fontSize: 16 }}>M</span>
-          </div>
-          <span style={{
-            fontFamily: "var(--font-playfair), Georgia, serif",
-            fontSize: 22, fontWeight: 700, letterSpacing: "0.02em",
-            color: dark ? COLORS.oliveDark : "#fff",
-            transition: "color 0.4s",
-          }}>Maiori</span>
-        </Link>
-
-        <div style={{ display: "flex", gap: 32, alignItems: "center" }} className="desktop-nav">
-          {links.map(l => (
-            <Link key={l.href} href={l.href} className={pathname === l.href ? "" : "nav-link"} style={{
-              fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13, fontWeight: 600,
-              letterSpacing: "0.07em", textTransform: "uppercase",
-              background: "none", border: "none", cursor: "pointer",
-              color: pathname === l.href ? COLORS.olive : (dark ? COLORS.charcoal : "rgba(255,255,255,0.85)"),
-              borderBottom: pathname === l.href ? `2px solid ${COLORS.olive}` : "2px solid transparent",
-              paddingBottom: 2, transition: "color 0.25s",
-              textDecoration: "none",
-            }}>{l.label}</Link>
-          ))}
-          <Link href="/contatti" className="btn-lift" style={{
-            background: COLORS.gold, color: COLORS.oliveDark,
-            padding: "10px 22px", borderRadius: 4,
-            fontFamily: "var(--font-dmsans), sans-serif", fontSize: 12, fontWeight: 700,
-            letterSpacing: "0.09em", textTransform: "uppercase",
-            border: "none", cursor: "pointer",
-            textDecoration: "none",
-          }}>Richiedi Preventivo</Link>
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-[100] transition-[background-color,box-shadow,backdrop-filter] duration-300",
+        overHero
+          ? "on-dark bg-transparent"
+          : "border-b border-line/80 bg-paper/90 shadow-[0_1px_20px_-10px_rgba(23,32,28,0.4)] backdrop-blur-md"
+      )}
+    >
+      {/* Fascia informativa B2B */}
+      <div
+        className={cn(
+          "hidden md:block",
+          overHero ? "bg-brand-900/70" : "bg-brand-900"
+        )}
+      >
+        <div className="shell flex h-9 items-center justify-between font-sans text-2xs text-white/70">
+          <p className="flex items-center gap-2">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-brass" />
+            {SITE.tagline}
+          </p>
+          <p className="flex items-center gap-5">
+            <span className="inline-flex items-center gap-1.5">
+              <MapPin aria-hidden="true" className="h-3.5 w-3.5 text-brass" />
+              {SITE.zone}
+            </span>
+            <span className="text-white/40">Prezzi riservati ai professionisti</span>
+          </p>
         </div>
-
-        <button
-          onClick={() => setOpen(!open)}
-          aria-label={open ? "Chiudi menu" : "Apri menu"}
-          aria-expanded={open}
-          style={{
-            display: "none", background: "none", border: "none",
-            cursor: "pointer", padding: 10,
-            width: 44, height: 44,
-            flexDirection: "column", alignItems: "center", justifyContent: "center",
-          }} className="burger">
-          {[0, 1, 2].map(i => (
-            <div key={i} style={{
-              width: 24, height: 2, marginBottom: i < 2 ? 5 : 0,
-              background: dark ? COLORS.charcoal : "#fff",
-            }} />
-          ))}
-        </button>
       </div>
 
-      {open && (
-        <div style={{
-          background: COLORS.cream, padding: "1.5rem 2rem",
-          borderTop: `1px solid ${COLORS.lightGray}`,
-          display: "flex", flexDirection: "column", gap: 12,
-        }}>
-          {links.map(l => (
-            <Link key={l.href} href={l.href} onClick={() => setOpen(false)} style={{
-              fontFamily: "var(--font-dmsans), sans-serif", fontSize: 16,
-              color: pathname === l.href ? COLORS.olive : COLORS.charcoal,
-              fontWeight: pathname === l.href ? 700 : 500,
-              background: "none", border: "none", cursor: "pointer",
-              textAlign: "left", padding: "4px 0",
-              textDecoration: "none",
-            }}>{l.label}</Link>
-          ))}
-          <Link href="/contatti" onClick={() => setOpen(false)} style={{
-            background: COLORS.olive, color: "#fff",
-            padding: "13px", borderRadius: 4, textAlign: "center",
-            fontFamily: "var(--font-dmsans), sans-serif", fontSize: 14, fontWeight: 700,
-            border: "none", cursor: "pointer", marginTop: 4,
-            textDecoration: "none", display: "block",
-          }}>Richiedi Preventivo →</Link>
-        </div>
-      )}
+      {/* Barra principale */}
+      <div className="shell flex h-16 items-center justify-between gap-4 md:h-[68px]">
+        <Link
+          href="/"
+          aria-label={`${SITE.name} — home`}
+          className="rounded-lg py-1 no-underline"
+        >
+          <Logo tone={overHero ? "light" : "dark"} />
+        </Link>
 
-      <style>{`
-        @media(max-width:768px){.desktop-nav{display:none!important}.burger{display:flex!important}}
-      `}</style>
-    </nav>
+        {/* Navigazione desktop */}
+        <nav aria-label="Principale" className="hidden items-center gap-1 md:flex">
+          {NAV_LINKS.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "relative rounded-lg px-4 py-2.5 font-sans text-[0.8125rem] font-bold uppercase tracking-[0.09em] no-underline transition-colors",
+                  overHero
+                    ? active
+                      ? "text-white"
+                      : "text-white/70 hover:text-white"
+                    : active
+                      ? "text-brand-700"
+                      : "text-ink-soft hover:text-ink"
+                )}
+              >
+                {link.label}
+                {active && (
+                  <motion.span
+                    layoutId="nav-active"
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full",
+                      overHero ? "bg-brass" : "bg-accent"
+                    )}
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
+              </Link>
+            );
+          })}
+          <Link
+            href="/contatti"
+            className={cn(
+              "ml-3",
+              overHero ? "btn bg-brass text-brand-900 hover:bg-brass-soft" : "btn-primary"
+            )}
+          >
+            Richiedi preventivo
+          </Link>
+        </nav>
+
+        {/* Menu mobile */}
+        <Dialog.Root open={open} onOpenChange={setOpen}>
+          <Dialog.Trigger asChild>
+            <button
+              type="button"
+              aria-label="Apri il menu"
+              className={cn(
+                "-mr-2 grid h-11 w-11 place-items-center rounded-xl transition-colors md:hidden",
+                overHero
+                  ? "text-white hover:bg-white/10"
+                  : "text-ink hover:bg-ink/5"
+              )}
+            >
+              <Menu aria-hidden="true" className="h-6 w-6" />
+            </button>
+          </Dialog.Trigger>
+
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 z-[150] bg-brand-900/60 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+            <Dialog.Content
+              aria-describedby={undefined}
+              className="on-dark fixed inset-y-0 right-0 z-[150] flex w-[min(22rem,88vw)] flex-col overflow-y-auto bg-brand-900 px-6 pb-8 pt-5 shadow-lifted data-[state=open]:animate-rise-in"
+            >
+              <Dialog.Title className="sr-only">Menu di navigazione</Dialog.Title>
+              <div className="flex items-center justify-between">
+                <Logo tone="light" />
+                <Dialog.Close asChild>
+                  <button
+                    type="button"
+                    aria-label="Chiudi il menu"
+                    className="-mr-2 grid h-11 w-11 place-items-center rounded-xl text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    <X aria-hidden="true" className="h-5 w-5" />
+                  </button>
+                </Dialog.Close>
+              </div>
+
+              <nav aria-label="Principale (mobile)" className="mt-10 flex flex-col">
+                {NAV_LINKS.map((link) => {
+                  const active = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "flex min-h-[52px] items-center justify-between border-b border-white/10 font-display text-xl no-underline transition-colors",
+                        active ? "text-brass" : "text-white hover:text-brass-soft"
+                      )}
+                    >
+                      {link.label}
+                      <ArrowRight aria-hidden="true" className="h-4 w-4 opacity-50" />
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <Link
+                href="/contatti"
+                onClick={() => setOpen(false)}
+                className="btn mt-8 w-full bg-brass text-brand-900 hover:bg-brass-soft"
+              >
+                Richiedi preventivo
+              </Link>
+
+              <dl className="mt-auto space-y-4 pt-12 font-sans text-sm text-white/70">
+                {[
+                  { Icon: Phone, label: "Telefono", value: SITE.phone },
+                  { Icon: Mail, label: "Email", value: SITE.email },
+                  { Icon: Clock, label: "Orari", value: SITE.hours },
+                ].map(({ Icon, label, value }) => (
+                  <div key={label} className="flex items-start gap-3">
+                    <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-brass" />
+                    <div>
+                      <dt className="text-2xs font-bold uppercase tracking-eyebrow text-white/45">
+                        {label}
+                      </dt>
+                      <dd className="mt-0.5">{value}</dd>
+                    </div>
+                  </div>
+                ))}
+              </dl>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      </div>
+    </header>
   );
 }
