@@ -76,7 +76,7 @@ export default function Nav() {
                 href={link.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative rounded-lg px-4 py-2.5 font-sans text-[0.8125rem] font-bold uppercase tracking-[0.09em] no-underline transition-colors",
+                  "relative inline-flex min-h-[44px] items-center rounded-lg px-4 font-sans text-[0.8125rem] font-bold uppercase tracking-[0.09em] no-underline transition-colors",
                   overHero
                     ? active
                       ? "text-white"
