@@ -30,6 +30,7 @@ export default function SearchResults({ query, results, onOpen, onReset }) {
           key={`${result.item.name}-${i}`}
           item={result.item}
           accentColor={result.color}
+          categoryLabel={result.categoryLabel}
           index={i}
           onOpen={() => onOpen(result)}
         />

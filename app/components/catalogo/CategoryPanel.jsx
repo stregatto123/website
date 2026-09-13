@@ -27,6 +27,7 @@ export default function CategoryPanel({ category, subFilter, onOpen }) {
           sub={sub}
           slug={slugify(sub.title)}
           accentColor={category.color}
+          categoryLabel={category.label}
           onOpen={(item) =>
             onOpen({
               item,

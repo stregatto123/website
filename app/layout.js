@@ -4,6 +4,7 @@ import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import MotionProvider from "./components/MotionProvider";
 import PageFade from "./components/PageFade";
+import { RequestListProvider } from "./components/lista/RequestListProvider";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -49,11 +50,13 @@ export default function RootLayout({ children }) {
           Salta al contenuto
         </a>
         <MotionProvider>
-          <Nav />
-          <main id="contenuto" className="flex-1">
-            <PageFade>{children}</PageFade>
-          </main>
-          <Footer />
+          <RequestListProvider>
+            <Nav />
+            <main id="contenuto" className="flex-1">
+              <PageFade>{children}</PageFade>
+            </main>
+            <Footer />
+          </RequestListProvider>
         </MotionProvider>
       </body>
     </html>

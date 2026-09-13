@@ -3,7 +3,13 @@
 import ProductCard from "./ProductCard";
 import { tint } from "../../lib/colors";
 
-export default function SubCategoryBlock({ sub, accentColor, onOpen, slug }) {
+export default function SubCategoryBlock({
+  sub,
+  accentColor,
+  categoryLabel,
+  onOpen,
+  slug,
+}) {
   return (
     <section id={slug} className="scroll-mt-44">
       <header className="flex items-center gap-3">
@@ -30,6 +36,7 @@ export default function SubCategoryBlock({ sub, accentColor, onOpen, slug }) {
             key={`${sub.title}-${item.name}-${i}`}
             item={item}
             accentColor={accentColor}
+            categoryLabel={categoryLabel}
             index={i}
             onOpen={onOpen}
           />

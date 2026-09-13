@@ -72,6 +72,16 @@ module.exports = {
           from: { opacity: "0", transform: "translateY(12px) scale(0.97)" },
           to: { opacity: "1", transform: "translateY(0) scale(1)" },
         },
+        /* Variante per i dialoghi centrati con translate(-50%,-50%): il
+           keyframe deve riportare anche la centratura, altrimenti la
+           transform dell'animazione sovrascrive le utility di posizione. */
+        "modal-in": {
+          from: {
+            opacity: "0",
+            transform: "translate(-50%, calc(-50% + 12px)) scale(0.97)",
+          },
+          to: { opacity: "1", transform: "translate(-50%, -50%) scale(1)" },
+        },
         marquee: {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-50%)" },
@@ -81,6 +91,7 @@ module.exports = {
         "rise-in": "rise-in 0.55s cubic-bezier(0.22,1,0.36,1) both",
         "fade-in": "fade-in 0.5s ease both",
         "scale-in": "scale-in 0.24s cubic-bezier(0.22,1,0.36,1) both",
+        "modal-in": "modal-in 0.24s cubic-bezier(0.22,1,0.36,1) both",
         marquee: "marquee 38s linear infinite",
       },
     },

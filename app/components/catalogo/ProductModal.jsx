@@ -5,6 +5,7 @@ import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowRight, Tag, X } from "lucide-react";
 import { tint } from "../../lib/colors";
+import AddToListButton from "../lista/AddToListButton";
 
 /**
  * Scheda prodotto in modale (Radix Dialog: focus trap, chiusura con Esc,
@@ -29,7 +30,7 @@ export default function ProductModal({ product, onClose }) {
     >
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-[400] bg-brand-900/70 backdrop-blur-sm data-[state=open]:animate-fade-in" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-[400] max-h-[92vh] w-[min(30rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl bg-surface shadow-lifted data-[state=open]:animate-scale-in">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-[400] max-h-[92vh] w-[min(30rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl bg-surface shadow-lifted data-[state=open]:animate-modal-in">
           {item && (
             <>
               <div
@@ -108,10 +109,18 @@ export default function ProductModal({ product, onClose }) {
                   preventivo per disponibilità e condizioni.
                 </p>
 
+                <AddToListButton
+                  item={item}
+                  accentColor={accent}
+                  categoryLabel={product.categoryLabel}
+                  variant="full"
+                  className="mt-4"
+                />
+
                 <Link
                   href="/contatti"
                   onClick={onClose}
-                  className="btn-primary mt-4 w-full"
+                  className="btn-primary mt-2.5 w-full"
                 >
                   Richiedi preventivo
                   <ArrowRight aria-hidden="true" className="h-4 w-4" />
