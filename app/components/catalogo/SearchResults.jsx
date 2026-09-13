@@ -1,47 +1,39 @@
 "use client";
 
-import { COLORS } from "../../lib/colors";
+import { SearchX } from "lucide-react";
 import ProductCard from "./ProductCard";
-import products from "../../lib/products";
 
-export default function SearchResults({ query, onOpenModal }) {
-  const results = [];
-  Object.values(products).forEach(cat => {
-    cat.subcategories.forEach(sub => {
-      sub.items.forEach(item => {
-        if (item.name.toLowerCase().includes(query.toLowerCase()) ||
-            item.tags.some(t => t.toLowerCase().includes(query.toLowerCase()))) {
-          results.push({ item, color: cat.color });
-        }
-      });
-    });
-  });
-
-  if (results.length === 0) return (
-    <div style={{ textAlign: "center", padding: "60px 0", color: COLORS.gray, fontFamily: "var(--font-dmsans), sans-serif" }}>
-      <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
-      <div style={{ fontSize: 15 }}>Nessun prodotto trovato per "<strong>{query}</strong>"</div>
-    </div>
-  );
+export default function SearchResults({ query, results, onOpen, onReset }) {
+  if (results.length === 0) {
+    return (
+      <div className="mx-auto max-w-md rounded-card border border-line bg-surface px-6 py-14 text-center shadow-soft">
+        <SearchX aria-hidden="true" className="mx-auto h-9 w-9 text-ink-soft/50" />
+        <p className="mt-4 font-display text-lg font-bold text-ink">
+          Nessun prodotto trovato
+        </p>
+        <p className="mt-2 font-sans text-sm leading-relaxed text-ink-soft">
+          Non ci sono risultati per «{query}». Prova con un termine più
+          generico, oppure scrivici: l&apos;assortimento è più ampio di quanto
+          pubblicato.
+        </p>
+        <button type="button" onClick={onReset} className="btn-ghost mt-6">
+          Azzera la ricerca
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "24px 0" }}>
-      <div style={{
-        fontFamily: "var(--font-dmsans), sans-serif", fontSize: 12,
-        color: COLORS.gray, marginBottom: 20, letterSpacing: "0.04em",
-      }}>{results.length} risultati per "<strong style={{ color: COLORS.charcoal }}>{query}</strong>"</div>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
-        gap: 12,
-      }}>
-        {results.map(({ item, color }, i) => (
-          <ProductCard
-            key={i} item={item} accentColor={color}
-            delay={i * 0.03} inView={true} onOpenModal={onOpenModal}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+      {results.map((result, i) => (
+        <ProductCard
+          key={`${result.item.name}-${i}`}
+          item={result.item}
+          accentColor={result.color}
+          index={i}
+          onOpen={() => onOpen(result)}
+        />
+      ))}
     </div>
   );
 }

@@ -1,92 +1,90 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { COLORS } from "../../lib/colors";
+import { useState } from "react";
+import { Plus } from "lucide-react";
+import { tint } from "../../lib/colors";
 
-export default function ProductCard({ item, accentColor, delay, inView, onOpenModal }) {
+/**
+ * Scheda prodotto.
+ *
+ * L'ingresso è una semplice animazione CSS che parte al mount (`animate-rise-in`):
+ * niente IntersectionObserver, così i prodotti di un pannello sono sempre
+ * visibili appena il tab viene selezionato, anche senza scorrere la pagina.
+ */
+export default function ProductCard({ item, accentColor, index = 0, onOpen }) {
   const [imgErr, setImgErr] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const [hover, setHover] = useState(false);
-  const imgRef = useRef(null);
-  useEffect(() => {
-    if (imgRef.current && imgRef.current.complete) setImgLoaded(true);
-  }, []);
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      aria-label={`${item.name} — apri dettagli`}
-      onClick={() => onOpenModal(item)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onOpenModal(item);
-        }
+    <button
+      type="button"
+      onClick={() => onOpen(item)}
+      aria-label={`${item.name} — apri la scheda prodotto`}
+      className="group flex animate-rise-in flex-col overflow-hidden rounded-card border border-line bg-surface text-left shadow-soft transition-[box-shadow,transform,border-color] duration-300 hover:-translate-y-1 hover:shadow-lifted"
+      style={{ animationDelay: `${Math.min(index, 12) * 40}ms` }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = tint(accentColor, 0.45);
       }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
-      onBlur={() => setHover(false)}
-      className="focusable-card"
-      style={{
-        borderRadius: 12, overflow: "hidden",
-        background: "#fff",
-        border: `1px solid ${hover ? accentColor : COLORS.lightGray}`,
-        boxShadow: hover ? `0 12px 36px rgba(0,0,0,0.1)` : "0 2px 8px rgba(0,0,0,0.05)",
-        transform: hover ? "translateY(-5px)" : "translateY(0)",
-        transition: "all 0.25s ease",
-        cursor: "pointer",
-        opacity: inView ? 1 : 0,
-        transitionDelay: inView ? `${delay}s` : "0s",
-        display: "flex", flexDirection: "column",
-      }}>
-      {/* Image */}
-      <div style={{ height: 150, overflow: "hidden", position: "relative", background: `${accentColor}10`, flexShrink: 0 }}>
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "";
+      }}
+    >
+      <span
+        className="relative block aspect-[4/3] overflow-hidden"
+        style={{ backgroundColor: tint(accentColor, 0.08) }}
+      >
         {item.img && !imgErr ? (
-          <img ref={imgRef} src={item.img} alt={item.name} onError={() => setImgErr(true)} onLoad={() => setImgLoaded(true)}
-            style={{
-              width: "100%", height: "100%", objectFit: "cover",
-              opacity: imgLoaded ? 1 : 0,
-              transform: hover ? "scale(1.06)" : imgLoaded ? "scale(1)" : "scale(1.03)",
-              transition: "transform 0.4s ease, opacity 0.35s ease",
-            }} />
+          <img
+            src={item.img}
+            alt=""
+            loading="lazy"
+            onError={() => setImgErr(true)}
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+          />
         ) : (
-          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>
-            {accentColor === COLORS.gold ? "🧀" : accentColor === COLORS.tomato ? "🥩" : "🍅"}
-          </div>
+          <span
+            aria-hidden="true"
+            className="grid h-full w-full place-items-center font-display text-2xl font-bold"
+            style={{ color: accentColor }}
+          >
+            M
+          </span>
         )}
-        {/* Hover overlay */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: `${accentColor}22`,
-          opacity: hover ? 1 : 0, transition: "opacity 0.25s",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
-          <div style={{
-            background: "#fff", borderRadius: 20, padding: "5px 14px",
-            fontFamily: "var(--font-dmsans), sans-serif", fontSize: 11,
-            fontWeight: 700, color: accentColor,
-          }}>Dettagli →</div>
-        </div>
-      </div>
 
-      {/* Name + tags */}
-      <div style={{ padding: "12px 13px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
-        <div style={{
-          fontFamily: "var(--font-playfair), Georgia, serif",
-          fontSize: 13, fontWeight: 700, color: COLORS.charcoal, lineHeight: 1.35,
-        }}>{item.name}</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-          {item.tags.slice(0, 2).map(t => (
-            <span key={t} style={{
-              background: `${accentColor}12`, border: `1px solid ${accentColor}28`,
-              color: accentColor, padding: "2px 7px", borderRadius: 100,
-              fontFamily: "var(--font-dmsans), sans-serif", fontSize: 9, fontWeight: 700,
-            }}>{t}</span>
-          ))}
-        </div>
-      </div>
-    </div>
+        {/* Affordance "apri scheda" */}
+        <span
+          aria-hidden="true"
+          className="absolute bottom-2.5 right-2.5 grid h-8 w-8 place-items-center rounded-full bg-surface/95 opacity-0 shadow-soft transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+          style={{ color: accentColor }}
+        >
+          <Plus className="h-4 w-4" />
+        </span>
+      </span>
+
+      <span className="flex flex-1 flex-col gap-2 p-4">
+        <span className="font-sans text-[0.9375rem] font-bold leading-snug text-ink">
+          {item.name}
+        </span>
+        <span className="line-clamp-2 font-sans text-[0.8125rem] leading-relaxed text-ink-soft">
+          {item.desc}
+        </span>
+        {item.tags?.length > 0 && (
+          <span className="mt-auto flex flex-wrap gap-1.5 pt-1.5">
+            {item.tags.slice(0, 2).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full px-2.5 py-1 font-sans text-[0.625rem] font-bold leading-none"
+                style={{
+                  color: accentColor,
+                  backgroundColor: tint(accentColor, 0.1),
+                  boxShadow: `inset 0 0 0 1px ${tint(accentColor, 0.22)}`,
+                }}
+              >
+                {tag}
+              </span>
+            ))}
+          </span>
+        )}
+      </span>
+    </button>
   );
 }

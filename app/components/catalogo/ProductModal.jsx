@@ -1,93 +1,126 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { COLORS } from "../../lib/colors";
+import * as Dialog from "@radix-ui/react-dialog";
+import { ArrowRight, Tag, X } from "lucide-react";
+import { tint } from "../../lib/colors";
 
-export default function ProductModal({ item, accentColor, onClose }) {
+/**
+ * Scheda prodotto in modale (Radix Dialog: focus trap, chiusura con Esc,
+ * blocco dello scroll e ruoli ARIA gestiti dalla primitiva).
+ * Non mostra mai prezzi: rimanda sempre alla richiesta di preventivo.
+ */
+export default function ProductModal({ product, onClose }) {
   const [imgErr, setImgErr] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const imgRef = useRef(null);
-  useEffect(() => {
-    const fn = (e) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", fn);
-    document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", fn); document.body.style.overflow = ""; };
-  }, [onClose]);
-  useEffect(() => {
-    if (imgRef.current && imgRef.current.complete) setImgLoaded(true);
-  }, []);
+  const open = Boolean(product);
+  const item = product?.item;
+  const accent = product?.color ?? "#1E6B58";
 
   return (
-    <div onClick={onClose} style={{
-      position: "fixed", inset: 0, zIndex: 500,
-      background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "1rem",
-    }}>
-      <div onClick={e => e.stopPropagation()} style={{
-        background: "#fff", borderRadius: 16,
-        maxWidth: 480, width: "100%",
-        boxShadow: "0 24px 80px rgba(0,0,0,0.25)",
-        overflow: "hidden",
-        animation: "modalIn 0.25s ease",
-      }}>
-        {/* Image */}
-        <div style={{ height: 220, overflow: "hidden", position: "relative", background: `${accentColor}12` }}>
-          {item.img && !imgErr ? (
-            <img ref={imgRef} src={item.img} alt={item.name} onError={() => setImgErr(true)} onLoad={() => setImgLoaded(true)}
-              style={{
-                width: "100%", height: "100%", objectFit: "cover",
-                opacity: imgLoaded ? 1 : 0, transition: "opacity 0.4s ease",
-              }} />
-          ) : (
-            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 56 }}>
-              {accentColor === COLORS.gold ? "🧀" : accentColor === COLORS.tomato ? "🥩" : "🍅"}
-            </div>
-          )}
-          {/* Color bar */}
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 4, background: accentColor }} />
-          {/* Close btn */}
-          <button onClick={onClose} aria-label="Chiudi" style={{
-            position: "absolute", top: 8, right: 8,
-            width: 44, height: 44, borderRadius: "50%",
-            background: "rgba(0,0,0,0.4)", border: "none", cursor: "pointer",
-            color: "#fff", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
-          }}>✕</button>
-        </div>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) {
+          setImgErr(false);
+          onClose();
+        }
+      }}
+    >
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[400] bg-brand-900/70 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-[400] max-h-[92vh] w-[min(30rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl bg-surface shadow-lifted data-[state=open]:animate-scale-in">
+          {item && (
+            <>
+              <div
+                className="relative aspect-[16/10] max-h-[13.75rem] overflow-hidden"
+                style={{ backgroundColor: tint(accent, 0.1) }}
+              >
+                {item.img && !imgErr ? (
+                  <img
+                    src={item.img}
+                    alt=""
+                    onError={() => setImgErr(true)}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className="grid h-full w-full place-items-center font-display text-5xl font-bold"
+                    style={{ color: accent }}
+                  >
+                    M
+                  </span>
+                )}
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-0 h-1"
+                  style={{ backgroundColor: accent }}
+                />
+                <Dialog.Close asChild>
+                  <button
+                    type="button"
+                    aria-label="Chiudi la scheda prodotto"
+                    className="absolute right-3 top-3 grid h-11 w-11 place-items-center rounded-full bg-brand-900/55 text-white backdrop-blur-sm transition-colors hover:bg-brand-900/80"
+                  >
+                    <X aria-hidden="true" className="h-5 w-5" />
+                  </button>
+                </Dialog.Close>
+              </div>
 
-        {/* Content */}
-        <div style={{ padding: "24px 24px 28px" }}>
-          <h3 style={{
-            fontFamily: "var(--font-playfair), Georgia, serif",
-            fontSize: 20, fontWeight: 700, color: COLORS.charcoal,
-            margin: "0 0 10px", lineHeight: 1.3,
-          }}>{item.name}</h3>
-          <p style={{
-            fontFamily: "var(--font-dmsans), sans-serif",
-            fontSize: 14, lineHeight: 1.75, color: COLORS.gray,
-            margin: "0 0 18px",
-          }}>{item.desc}</p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 20 }}>
-            {item.tags.map(t => (
-              <span key={t} style={{
-                background: `${accentColor}12`, border: `1px solid ${accentColor}35`,
-                color: accentColor, padding: "4px 12px", borderRadius: 100,
-                fontFamily: "var(--font-dmsans), sans-serif", fontSize: 11, fontWeight: 700,
-              }}>{t}</span>
-            ))}
-          </div>
-          <Link href="/contatti" onClick={onClose} className="btn-lift" style={{
-            display: "block", textAlign: "center",
-            background: accentColor, color: "#fff",
-            padding: "13px", borderRadius: 8,
-            fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13,
-            fontWeight: 700, letterSpacing: "0.07em",
-            textDecoration: "none", textTransform: "uppercase",
-          }}>Richiedi Preventivo →</Link>
-        </div>
-      </div>
-      <style>{`@keyframes modalIn { from { opacity:0; transform:scale(0.93) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }`}</style>
-    </div>
+              <div className="p-6 sm:p-7">
+                <p
+                  className="eyebrow flex items-center gap-2"
+                  style={{ color: accent }}
+                >
+                  <Tag aria-hidden="true" className="h-3.5 w-3.5" />
+                  {product.categoryLabel}
+                </p>
+
+                <Dialog.Title className="mt-3 font-display text-[1.375rem] font-bold leading-snug text-ink">
+                  {item.name}
+                </Dialog.Title>
+
+                <Dialog.Description className="mt-3 font-sans text-[0.9375rem] leading-relaxed text-ink-soft">
+                  {item.desc}
+                </Dialog.Description>
+
+                {item.tags?.length > 0 && (
+                  <ul className="mt-5 flex flex-wrap gap-2">
+                    {item.tags.map((tag) => (
+                      <li
+                        key={tag}
+                        className="rounded-full px-3 py-1.5 font-sans text-xs font-bold leading-none"
+                        style={{
+                          color: accent,
+                          backgroundColor: tint(accent, 0.1),
+                          boxShadow: `inset 0 0 0 1px ${tint(accent, 0.28)}`,
+                        }}
+                      >
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <p className="mt-6 rounded-xl bg-paper-2 px-4 py-3 font-sans text-[0.8125rem] leading-relaxed text-ink-soft">
+                  I prezzi sono riservati ai clienti professionali: richiedi un
+                  preventivo per disponibilità e condizioni.
+                </p>
+
+                <Link
+                  href="/contatti"
+                  onClick={onClose}
+                  className="btn-primary mt-4 w-full"
+                >
+                  Richiedi preventivo
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </Link>
+              </div>
+            </>
+          )}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

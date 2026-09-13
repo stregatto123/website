@@ -1,19 +1,39 @@
 "use client";
 
-import { useInView } from "../../lib/useInView";
 import SubCategoryBlock from "./SubCategoryBlock";
+import { slugify } from "../../lib/slugify";
 
-export default function CategoryPanel({ data, isActive, onOpenModal }) {
-  const [ref, inView] = useInView();
+/**
+ * Pannello di una categoria: elenco delle sottocategorie (eventualmente
+ * filtrate) con le relative griglie di prodotti.
+ *
+ * Il contenuto è sempre renderizzato quando il pannello è attivo — nessun
+ * gating su IntersectionObserver — così i prodotti compaiono subito al
+ * cambio di tab, senza bisogno di scorrere la pagina.
+ */
+export default function CategoryPanel({ category, subFilter, onOpen }) {
+  const subs =
+    subFilter === "all"
+      ? category.subcategories
+      : category.subcategories.filter((s) => slugify(s.title) === subFilter);
 
-  if (!isActive) return null;
+  if (subs.length === 0) return null;
 
   return (
-    <div ref={ref} style={{ padding: "40px 0 20px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.6s" }}>
-      {data.subcategories.map((sub, si) => (
+    <div className="space-y-12 sm:space-y-14">
+      {subs.map((sub) => (
         <SubCategoryBlock
-          key={si} sub={sub} accentColor={data.color}
-          inView={inView} subIndex={si} onOpenModal={onOpenModal}
+          key={sub.title}
+          sub={sub}
+          slug={slugify(sub.title)}
+          accentColor={category.color}
+          onOpen={(item) =>
+            onOpen({
+              item,
+              color: category.color,
+              categoryLabel: category.label,
+            })
+          }
         />
       ))}
     </div>

@@ -1,144 +1,274 @@
 "use client";
 
-import { useState } from "react";
-import { COLORS } from "../../lib/colors";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import * as Tabs from "@radix-ui/react-tabs";
+import { Search, X } from "lucide-react";
 import products from "../../lib/products";
+import { slugify } from "../../lib/slugify";
+import { cn } from "../../lib/cn";
+import { tint } from "../../lib/colors";
 import CategoryPanel from "./CategoryPanel";
 import SearchResults from "./SearchResults";
 import ProductModal from "./ProductModal";
 
-const tabs = [
-  { key: "latticini", label: "Latticini", icon: "🥛", color: COLORS.gold },
-  { key: "salumi", label: "Salumi", icon: "🥩", color: COLORS.tomato },
-  { key: "conserve", label: "Conserve", icon: "🍅", color: COLORS.olive },
-];
+const CATEGORY_KEYS = Object.keys(products);
+
+const countItems = (category) =>
+  category.subcategories.reduce((acc, sub) => acc + sub.items.length, 0);
+
+/** Normalizza per la ricerca: minuscole e senza accenti. */
+const normalize = (value) =>
+  String(value)
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
 
 export default function Catalogo() {
-  const [activeTab, setActiveTab] = useState("latticini");
-  const [search, setSearch] = useState("");
-  const [modal, setModal] = useState(null); // { item, color }
+  const searchParams = useSearchParams();
+  const requestedCat = searchParams.get("cat");
 
-  const totalProducts = Object.values(products).reduce((acc, cat) =>
-    acc + cat.subcategories.reduce((a, s) => a + s.items.length, 0), 0);
+  const [activeTab, setActiveTab] = useState(
+    CATEGORY_KEYS.includes(requestedCat) ? requestedCat : CATEGORY_KEYS[0]
+  );
+  const [subFilter, setSubFilter] = useState("all");
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState(null);
+
+  // Permette di arrivare su una categoria specifica da /catalogo?cat=salumi
+  useEffect(() => {
+    if (CATEGORY_KEYS.includes(requestedCat)) {
+      setActiveTab(requestedCat);
+      setSubFilter("all");
+    }
+  }, [requestedCat]);
+
+  const totalProducts = useMemo(
+    () => Object.values(products).reduce((acc, cat) => acc + countItems(cat), 0),
+    []
+  );
+
+  const trimmed = query.trim();
+  const searching = trimmed.length > 0;
+
+  const results = useMemo(() => {
+    if (!searching) return [];
+    const needle = normalize(trimmed);
+    const found = [];
+    Object.values(products).forEach((category) => {
+      category.subcategories.forEach((sub) => {
+        sub.items.forEach((item) => {
+          const haystack = normalize(
+            [item.name, item.desc, sub.title, ...(item.tags || [])].join(" ")
+          );
+          if (haystack.includes(needle)) {
+            found.push({
+              item,
+              color: category.color,
+              categoryLabel: category.label,
+            });
+          }
+        });
+      });
+    });
+    return found;
+  }, [searching, trimmed]);
+
+  const activeCategory = products[activeTab];
+
+  function handleTabChange(next) {
+    setActiveTab(next);
+    setSubFilter("all");
+    // Mantiene l'URL condivisibile senza forzare un nuovo render del router.
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("cat", next);
+      window.history.replaceState(null, "", url);
+    }
+  }
 
   return (
-    <section id="catalogo" style={{ scrollMarginTop: 72 }}>
-      {/* Header */}
-      <div style={{ background: COLORS.charcoal, padding: "64px 2rem 0" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-            <div style={{ width: 24, height: 2, background: COLORS.gold }} />
-            <span style={{ fontFamily: "var(--font-dmsans), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", color: COLORS.gold, textTransform: "uppercase" }}>
-              Il Nostro Assortimento
-            </span>
-          </div>
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 36 }}>
-            <h2 style={{
-              fontFamily: "var(--font-playfair), Georgia, serif",
-              fontSize: "clamp(28px,4vw,46px)", fontWeight: 700,
-              color: "#fff", margin: 0,
-            }}>Catalogo Prodotti</h2>
-            <span style={{
-              fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13,
-              color: "rgba(255,255,255,0.4)",
-            }}>{totalProducts} referenze disponibili · prezzi su richiesta</span>
+    <>
+      {/* Intestazione */}
+      <section className="on-dark relative isolate overflow-hidden bg-brand-900 text-white grain">
+        <div
+          aria-hidden="true"
+          className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-brand-500/25 blur-3xl"
+        />
+        <div className="shell relative z-10 pb-12 pt-[calc(var(--nav-h)+2.5rem)]">
+          <p className="eyebrow eyebrow-rule text-brass">Il nostro assortimento</p>
+          <div className="mt-4 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+            <h1 className="font-display text-[clamp(2rem,5vw,3.25rem)] font-bold leading-[1.08] tracking-[-0.02em]">
+              Catalogo prodotti
+            </h1>
+            <p className="font-sans text-sm text-white/60">
+              {totalProducts} referenze · prezzi riservati ai professionisti
+            </p>
           </div>
 
-          {/* Search bar */}
-          <div style={{
-            position: "relative", marginBottom: 32, maxWidth: 440,
-          }}>
-            <span style={{
-              position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-              fontSize: 16, pointerEvents: "none",
-            }}>🔍</span>
-            <label htmlFor="catalogo-search" style={{
-              position: "absolute", width: 1, height: 1, padding: 0, margin: -1,
-              overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0,
-            }}>Cerca un prodotto</label>
+          <div className="relative mt-8 max-w-xl">
+            <label htmlFor="catalogo-search" className="sr-only">
+              Cerca un prodotto nel catalogo
+            </label>
+            <Search
+              aria-hidden="true"
+              className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/45"
+            />
             <input
               id="catalogo-search"
-              type="text"
-              placeholder="Cerca un prodotto... es. mozzarella, tonno"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              style={{
-                width: "100%", padding: "12px 16px 12px 42px",
-                background: "rgba(255,255,255,0.08)",
-                border: "1.5px solid rgba(255,255,255,0.15)",
-                borderRadius: 8, outline: "none",
-                fontFamily: "var(--font-dmsans), sans-serif", fontSize: 14,
-                color: "#fff", boxSizing: "border-box",
-                transition: "border-color 0.2s",
-              }}
-              onFocus={e => e.target.style.borderColor = "rgba(255,255,255,0.5)"}
-              onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.15)"}
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Cerca un prodotto… es. mozzarella, tonno, crudo"
+              className="min-h-[52px] w-full rounded-full border border-white/20 bg-white/10 pl-12 pr-12 font-sans text-[0.9375rem] text-white outline-none transition placeholder:text-white/45 focus:border-brass/70 focus:bg-white/15 [&::-webkit-search-cancel-button]:hidden"
             />
-            {search && (
-              <button onClick={() => setSearch("")} aria-label="Cancella ricerca" style={{
-                position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)",
-                width: 40, height: 40,
-                background: "none", border: "none", cursor: "pointer",
-                color: "rgba(255,255,255,0.5)", fontSize: 16,
-              }}>✕</button>
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Cancella la ricerca"
+                className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <X aria-hidden="true" className="h-4 w-4" />
+              </button>
             )}
           </div>
+        </div>
+      </section>
 
-          {/* Tabs */}
-          {!search && (
-            <div style={{ display: "flex", gap: 0, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-              {tabs.map(t => (
-                <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
-                  background: "none", border: "none", cursor: "pointer",
-                  padding: "12px 28px 14px",
-                  fontFamily: "var(--font-dmsans), sans-serif", fontSize: 13, fontWeight: 700,
-                  letterSpacing: "0.05em",
-                  color: activeTab === t.key ? t.color : "rgba(255,255,255,0.45)",
-                  borderBottom: activeTab === t.key ? `2px solid ${t.color}` : "2px solid transparent",
-                  marginBottom: -1, transition: "all 0.2s",
-                  display: "flex", alignItems: "center", gap: 7,
-                }}>
-                  <span>{t.icon}</span>
-                  <span>{t.label}</span>
-                  <span style={{
-                    background: activeTab === t.key ? `${t.color}22` : "rgba(255,255,255,0.08)",
-                    color: activeTab === t.key ? t.color : "rgba(255,255,255,0.3)",
-                    fontSize: 10, padding: "1px 7px", borderRadius: 10, fontWeight: 600,
-                  }}>
-                    {products[t.key].subcategories.reduce((a, s) => a + s.items.length, 0)}
-                  </span>
+      {/* Tab categorie + filtri sottocategoria */}
+      <Tabs.Root value={activeTab} onValueChange={handleTabChange}>
+        <div className="sticky top-[var(--nav-h)] z-30 border-b border-line bg-paper/95 backdrop-blur-md">
+          <div className="shell">
+            {searching ? (
+              <div className="flex min-h-[60px] flex-wrap items-center justify-between gap-3 py-3">
+                <p className="font-sans text-sm text-ink-soft" aria-live="polite">
+                  <strong className="font-bold text-ink">{results.length}</strong>{" "}
+                  {results.length === 1 ? "risultato" : "risultati"} per «
+                  <strong className="font-bold text-ink">{trimmed}</strong>»
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="inline-flex min-h-[44px] items-center gap-1.5 font-sans text-xs font-bold uppercase tracking-[0.08em] text-accent"
+                >
+                  <X aria-hidden="true" className="h-3.5 w-3.5" />
+                  Torna alle categorie
                 </button>
-              ))}
-            </div>
-          )}
+              </div>
+            ) : (
+              <Tabs.List
+                aria-label="Categorie di prodotto"
+                className="-mx-1 flex gap-1 overflow-x-auto py-2.5"
+              >
+                {CATEGORY_KEYS.map((key) => {
+                  const category = products[key];
+                  const active = activeTab === key;
+                  return (
+                    <Tabs.Trigger
+                      key={key}
+                      value={key}
+                      className={cn(
+                        "group inline-flex min-h-[44px] shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 font-sans text-[0.8125rem] font-bold transition-colors",
+                        active ? "text-white" : "text-ink-soft hover:bg-ink/5 hover:text-ink"
+                      )}
+                      style={active ? { backgroundColor: category.color } : undefined}
+                    >
+                      {category.label}
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[0.625rem] leading-none",
+                          active ? "bg-white/20 text-white" : "bg-ink/8 text-ink-soft"
+                        )}
+                      >
+                        {countItems(category)}
+                      </span>
+                    </Tabs.Trigger>
+                  );
+                })}
+              </Tabs.List>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <div style={{ background: COLORS.warmWhite, minHeight: 400 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem" }}>
-          {search ? (
-            <SearchResults query={search} onOpenModal={(item) => setModal({ item, color: Object.values(products).find(c => c.subcategories.some(s => s.items.includes(item)))?.color || COLORS.olive })} />
-          ) : (
-            Object.entries(products).map(([key, data]) => (
-              <CategoryPanel
-                key={key} data={data}
-                isActive={activeTab === key}
-                onOpenModal={(item) => setModal({ item, color: data.color })}
+        <div className="bg-paper pb-24 pt-10">
+          <div className="shell">
+            {searching ? (
+              <SearchResults
+                query={trimmed}
+                results={results}
+                onOpen={setSelected}
+                onReset={() => setQuery("")}
               />
-            ))
-          )}
-        </div>
-      </div>
+            ) : (
+              <>
+                {/* Filtri rapidi per sottocategoria */}
+                <div className="-mx-5 mb-10 flex gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+                  {[{ slug: "all", title: "Tutte le sottocategorie" }]
+                    .concat(
+                      activeCategory.subcategories.map((sub) => ({
+                        slug: slugify(sub.title),
+                        title: sub.title,
+                      }))
+                    )
+                    .map((chip) => {
+                      const active = subFilter === chip.slug;
+                      return (
+                        <button
+                          key={chip.slug}
+                          type="button"
+                          onClick={() => setSubFilter(chip.slug)}
+                          aria-pressed={active}
+                          className={cn(
+                            "inline-flex min-h-[38px] shrink-0 items-center rounded-full border px-3.5 font-sans text-xs font-semibold transition-colors",
+                            active
+                              ? "border-transparent text-white"
+                              : "border-line bg-surface text-ink-soft hover:border-ink/25 hover:text-ink"
+                          )}
+                          style={
+                            active
+                              ? { backgroundColor: activeCategory.color }
+                              : undefined
+                          }
+                        >
+                          {chip.title}
+                        </button>
+                      );
+                    })}
+                </div>
 
-      {/* Modal */}
-      {modal && (
-        <ProductModal
-          item={modal.item}
-          accentColor={modal.color}
-          onClose={() => setModal(null)}
-        />
-      )}
-    </section>
+                {CATEGORY_KEYS.map((key) => (
+                  <Tabs.Content key={key} value={key} className="outline-none">
+                    <CategoryPanel
+                      category={products[key]}
+                      subFilter={subFilter}
+                      onOpen={setSelected}
+                    />
+                  </Tabs.Content>
+                ))}
+
+                <p
+                  className="mt-16 rounded-card border px-5 py-4 font-sans text-sm leading-relaxed text-ink-soft"
+                  style={{
+                    borderColor: tint(activeCategory.color, 0.25),
+                    backgroundColor: tint(activeCategory.color, 0.06),
+                  }}
+                >
+                  Non trovi una referenza? L&apos;assortimento è più ampio di
+                  quanto pubblicato:{" "}
+                  <Link href="/contatti" className="font-bold text-accent underline underline-offset-2">
+                    scrivici
+                  </Link>{" "}
+                  e verifichiamo la disponibilità.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </Tabs.Root>
+
+      <ProductModal product={selected} onClose={() => setSelected(null)} />
+    </>
   );
 }
