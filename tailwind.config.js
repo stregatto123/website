@@ -37,6 +37,17 @@ module.exports = {
           DEFAULT: "#C89A3C",
           soft: "#E6CE95",
         },
+
+        // Verde del marchio (nuovo logo su biglietto da visita) — isolato dal
+        // verde bottiglia "brand" usato nel resto del sito: solo per il logotipo.
+        logo: {
+          // Icona (sagoma Italia): decorativa, contrasto minimo 3:1 su ogni fondo.
+          DEFAULT: "#14994F",
+          // Sottotitolo su fondo chiaro: scurito per garantire AA (4.5:1) da testo.
+          text: "#107A3F",
+          // Sottotitolo su fondo scuro (footer, menu mobile): schiarito per AA.
+          "on-dark": "#4FCC8A",
+        },
       },
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "Times New Roman", "serif"],
