@@ -11,7 +11,7 @@ const covers = {
     blurb: "Mozzarelle per pizza, bufala DOP, burrate, paste filate e stagionati.",
   },
   salumi: {
-    img: "/images/salumi-misti.png",
+    img: "/images/prosciutto-crudo.jpg",
     blurb: "Cotti, crudi DOP, bresaole, arrosti, pancette e salami artigianali.",
   },
   conserve: {

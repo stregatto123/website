@@ -21,9 +21,9 @@ const values = [
 ];
 
 const gallery = [
-  { src: "/images/bufala.png", className: "aspect-[4/5]" },
+  { src: "/images/formaggio-stagionato.jpg", className: "aspect-[4/5]" },
   { src: "/images/prosciutto-crudo.jpg", className: "aspect-[4/5] sm:mt-10" },
-  { src: "/images/pecorino.jpg", className: "aspect-[4/3]" },
+  { src: "/images/stracciatella.png", className: "aspect-[4/3]" },
   { src: "/images/carciofi.jpg", className: "aspect-[4/3] sm:mt-10" },
 ];
 
@@ -58,7 +58,9 @@ export default function ChiSiamo({ standalone = false }) {
 
         <div className="order-1 lg:order-2">
           <Reveal>
-            <p className="eyebrow eyebrow-rule text-accent">Chi siamo</p>
+            <p className="eyebrow eyebrow-rule text-accent">
+              {standalone ? "La nostra storia" : "Chi siamo"}
+            </p>
             <h2 className="mt-4 font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-[1.12] tracking-[-0.01em] text-ink">
               Qualità che si sente,
               <span className="block italic text-brand-500">ad ogni consegna.</span>
