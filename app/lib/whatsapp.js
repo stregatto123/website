@@ -6,11 +6,7 @@
  * formato/tag: il listino resta riservato ai clienti professionali.
  */
 
-// TODO: sostituire con il numero WhatsApp reale dell'attività.
-// Formato internazionale senza "+", spazi o trattini (prefisso paese + numero,
-// es. 39 seguito dal numero italiano). Il valore qui sotto è un SEGNAPOSTO
-// fittizio: va compilato prima della pubblicazione del sito.
-export const WHATSAPP_NUMBER = "390000000000";
+export const WHATSAPP_NUMBER = "393317496528";
 
 const INTRO =
   "Buongiorno, vi scrivo dal sito Ingrosso Alimentari MAIORI. Vorrei ricevere disponibilità e preventivo per questi prodotti:";
