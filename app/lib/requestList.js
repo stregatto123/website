@@ -9,6 +9,16 @@
 import { slugify } from "./slugify";
 
 export const STORAGE_KEY = "maiori:lista-richiesta:v1";
+export const SENDER_STORAGE_KEY = "maiori:lista-richiesta:mittente:v1";
+
+/** Scarta un mittente salvato corrotto o scritto da una versione precedente. */
+export function sanitizeSender(value) {
+  if (!value || typeof value !== "object") return { name: "", business: "" };
+  return {
+    name: typeof value.name === "string" ? value.name : "",
+    business: typeof value.business === "string" ? value.business : "",
+  };
+}
 
 /**
  * Identificativo stabile di una referenza.

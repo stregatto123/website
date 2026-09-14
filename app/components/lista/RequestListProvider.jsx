@@ -8,7 +8,12 @@ import {
   useMemo,
   useState,
 } from "react";
-import { STORAGE_KEY, sanitizeEntries } from "../../lib/requestList";
+import {
+  STORAGE_KEY,
+  SENDER_STORAGE_KEY,
+  sanitizeEntries,
+  sanitizeSender,
+} from "../../lib/requestList";
 
 /**
  * Stato condiviso della lista richiesta.
@@ -24,6 +29,7 @@ const RequestListContext = createContext(null);
 
 export function RequestListProvider({ children }) {
   const [items, setItems] = useState([]);
+  const [sender, setSender] = useState({ name: "", business: "" });
   const [ready, setReady] = useState(false);
 
   // Lettura iniziale (solo lato client).
@@ -31,6 +37,8 @@ export function RequestListProvider({ children }) {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) setItems(sanitizeEntries(JSON.parse(raw)));
+      const rawSender = window.localStorage.getItem(SENDER_STORAGE_KEY);
+      if (rawSender) setSender(sanitizeSender(JSON.parse(rawSender)));
     } catch {
       // localStorage non disponibile (navigazione privata, storage pieno):
       // la lista funziona comunque, solo senza persistenza.
@@ -47,6 +55,15 @@ export function RequestListProvider({ children }) {
       /* vedi sopra */
     }
   }, [items, ready]);
+
+  useEffect(() => {
+    if (!ready) return;
+    try {
+      window.localStorage.setItem(SENDER_STORAGE_KEY, JSON.stringify(sender));
+    } catch {
+      /* vedi sopra */
+    }
+  }, [sender, ready]);
 
   // Allineamento fra schede.
   useEffect(() => {
@@ -82,12 +99,27 @@ export function RequestListProvider({ children }) {
 
   const clear = useCallback(() => setItems([]), []);
 
+  const setSenderField = useCallback((field, value) => {
+    setSender((current) => ({ ...current, [field]: value }));
+  }, []);
+
   const ids = useMemo(() => new Set(items.map((e) => e.id)), [items]);
   const has = useCallback((id) => ids.has(id), [ids]);
 
   const value = useMemo(
-    () => ({ items, count: items.length, ready, has, add, remove, toggle, clear }),
-    [items, ready, has, add, remove, toggle, clear]
+    () => ({
+      items,
+      count: items.length,
+      ready,
+      has,
+      add,
+      remove,
+      toggle,
+      clear,
+      sender,
+      setSenderField,
+    }),
+    [items, ready, has, add, remove, toggle, clear, sender, setSenderField]
   );
 
   return (

@@ -15,8 +15,8 @@ import { useRequestList } from "./RequestListProvider";
  * formato di ogni prodotto — mai prezzi.
  */
 export default function RequestListDrawer({ open, onOpenChange }) {
-  const { items, count, remove, clear } = useRequestList();
-  const whatsappUrl = buildWhatsAppUrl(items);
+  const { items, count, remove, clear, sender, setSenderField } = useRequestList();
+  const whatsappUrl = buildWhatsAppUrl(items, sender);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -135,6 +135,38 @@ export default function RequestListDrawer({ open, onOpenChange }) {
                 Inviando la lista ricevi disponibilità e preventivo: i prezzi
                 sono riservati ai clienti professionali.
               </p>
+
+              <div className="mt-3 grid gap-3">
+                <div>
+                  <label htmlFor="lista-mittente-nome" className="field-label">
+                    Il tuo nome
+                  </label>
+                  <input
+                    id="lista-mittente-nome"
+                    type="text"
+                    value={sender.name}
+                    onChange={(e) => setSenderField("name", e.target.value)}
+                    placeholder="Mario Esposito"
+                    autoComplete="name"
+                    className="field"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lista-mittente-attivita" className="field-label">
+                    La tua attività
+                  </label>
+                  <input
+                    id="lista-mittente-attivita"
+                    type="text"
+                    value={sender.business}
+                    onChange={(e) => setSenderField("business", e.target.value)}
+                    placeholder="La Pizzeria di Mario"
+                    autoComplete="organization"
+                    className="field"
+                  />
+                </div>
+              </div>
+
               <a
                 href={whatsappUrl}
                 target="_blank"
